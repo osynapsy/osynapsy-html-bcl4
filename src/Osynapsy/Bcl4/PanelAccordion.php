@@ -41,7 +41,7 @@ class PanelAccordion extends Component
         $panelIdx = count($this->panels);
         $panelId = $this->id.$panelIdx;
         $panelTitle = '<a data-toggle="collapse" data-parent="#'.$this->id.'" href="#'.$panelId.'-body" data-panel-id="'.$panelIdx.'" class="'.(filter_input(\INPUT_POST, $this->id) == $panelIdx ? 'collapsed' : '').'" onclick="">'.$title.'</a>';
-        $this->panels[] = new PanelNew($panelId, $panelTitle);
+        $this->panels[] = new Panel($panelId, $panelTitle);
         $this->panels[$panelIdx]
              ->addCommands($commands)
              ->getBody()

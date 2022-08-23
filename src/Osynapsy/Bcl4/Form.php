@@ -39,7 +39,7 @@ class Form extends Component
     protected $headCommand;
     protected $appendFootToMain = false;
 
-    public function __construct($name, $mainComponent = 'Panel', $tag = 'form', $bsv = 4)
+    public function __construct($name, $mainComponent = 'PanelTk', $tag = 'form', $bsv = 4)
     {
         parent::__construct($tag, $name);
         $this->repo = new Dictionary(['foot' => ['offset' => 1, 'width' => 10]]);
@@ -47,7 +47,7 @@ class Form extends Component
         $this->att(['name' => $name, 'method' => 'post', 'role' => 'form']);
         //Body setting
         $this->body = $this->buildMainComponent($mainComponent);
-        if ($mainComponent === 'Panel' && $bsv === 4) {
+        if ($mainComponent === 'PanelTk' && $bsv === 4) {
             $this->body->setClasses('card', 'card-header', 'card-body', 'card-footer');
         }
     }
@@ -81,7 +81,7 @@ class Form extends Component
 
     protected function buildMainComponent($mainComponent)
     {
-        $rawComponent = '\\Osynapsy\\Html\\Bcl\\'.$mainComponent;
+        $rawComponent = '\\Osynapsy\\Bcl4\\'.$mainComponent;
         $component = new $rawComponent($this->id.'_panel', 'div');
         $component->setParameter('label-position','inside');
         return $component;

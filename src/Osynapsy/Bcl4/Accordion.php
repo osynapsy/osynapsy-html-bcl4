@@ -48,7 +48,7 @@ class Accordion extends Component
         $open = $this->defaultOpen === $panelIdx ? true : false;
         //$panelHd = '<a data-toggle="collapse" data-parent="#'.$this->id.'" href="#'.$panelId.'-body" data-panel-id="'.$panelIdx.'" class="'.(filter_input(\INPUT_POST, $this->id) == $panelIdx ? 'collapsed' : '').'" onclick="">'.$title.'</a>';
         $panelHd = $this->buildHeader($title, $panelId.'_body', $open);
-        $panel = new PanelNew($panelId, $panelHd);
+        $panel = new Panel($panelId, $panelHd);
         $panel->setClass(
             'card-body collapse'.($open ? ' show' : ''),
             'card-header',
