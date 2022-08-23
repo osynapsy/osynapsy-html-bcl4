@@ -13,8 +13,7 @@ namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Component;
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Bcl\Button;
-use Osynapsy\Html\Ocl\HiddenBox;
+use Osynapsy\Ocl\HiddenBox;
 
 class ImageBox extends Component
 {
