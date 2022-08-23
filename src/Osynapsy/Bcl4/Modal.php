@@ -45,7 +45,7 @@ class Modal extends Component
     public function getPanelBody()
     {
         if (empty($this->panelBody)){
-            $this->panelBody = $this->addBody(new PanelNew($this->id.'PanelBody'));
+            $this->panelBody = $this->addBody(new Panel($this->id.'PanelBody'));
             $this->panelBody->resetClass();
         }
         return $this->panelBody;
@@ -54,7 +54,7 @@ class Modal extends Component
     public function getPanelFoot()
     {
         if (empty($this->panelFoot)){
-            $this->panelFoot = $this->addFooter(new PanelNew($this->id.'PanelFoot'));
+            $this->panelFoot = $this->addFooter(new Panel($this->id.'PanelFoot'));
             $this->panelFoot->resetClass();
         }
         return $this->panelFoot;
