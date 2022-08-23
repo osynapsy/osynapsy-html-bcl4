@@ -21,8 +21,8 @@ class ContextMenu extends Component
 
     public function __construct($id, $link, $label, $class='')
     {
-        $this->requireCss('assets/Bcl/ContextMenu/style.css');
-        $this->requireJs('assets/Bcl/ContextMenu/script.js');
+        $this->requireCss('assets/Bcl4/ContextMenu/style.css');
+        $this->requireJs('assets/Bcl4/ContextMenu/script.js');
         parent::__construct('div', $id);
         $this->att('class', 'BclContextMenu dropdown clearfix');
         $this->ul = $this->add(new Tag('ul'))

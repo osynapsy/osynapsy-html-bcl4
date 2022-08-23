@@ -18,15 +18,16 @@ class ListTree extends ListBox
     private $groups = array();
     public $data = array();
     private $request = null;
-    private $icon = array(
+    private $icon = [
         'open' => 'fa fa-chevron-down',
         'close' => 'fa fa-chevron-right'
-    );
+    ];
+
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->requireJs('assets/Bcl/ListBox/script.js');
-        $this->requireCss('assets/Bcl/ListBox/style.css');
+        $this->requireJs('assets/Bcl4/ListBox/script.js');
+        $this->requireCss('assets/Bcl4/ListBox/style.css');
     }
 
     protected function __build_extra__()

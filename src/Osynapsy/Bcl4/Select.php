@@ -27,7 +27,7 @@ class Select extends ComboBox
         $this->class = 'osy-select';
         $this->requireCss('assets/Lib/bootstrap-select-1.10.0/bootstrap-select.css');
         $this->requireJs('assets/Lib/bootstrap-select-1.10.0/bootstrap-select.js');
-        $this->requireJs('assets/Bcl/Select/script.js');
+        $this->requireJs('assets/Bcl4/Select/script.js');
         //$this->setParameter('option-select-disable',false);
         if ($multiple) {
             $this->setMultiSelect();

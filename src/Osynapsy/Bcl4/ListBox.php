@@ -23,8 +23,8 @@ class ListBox extends Component
 
     public function __construct($id)
     {
-        $this->requireJs('assets/Bcl/ListBox/script.js');
-        $this->requireCss('assets/Bcl/ListBox/style.css');
+        $this->requireJs('assets/Bcl4/ListBox/script.js');
+        $this->requireCss('assets/Bcl4/ListBox/style.css');
         parent::__construct('div', $id.'_container');
         $this->att('class','listbox');
         $this->hdn = $this->add(new HiddenBox($id));

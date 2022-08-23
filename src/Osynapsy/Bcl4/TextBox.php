@@ -148,7 +148,7 @@ class TextBox extends \Osynapsy\Ocl\TextBox
         }
         $mask = $this->imask[$iMaskId];
         $this->requireJs('assets/Lib/imask-6.0.5/imask.js');
-        $this->requireJs('assets/Bcl/InputMask/script.js');
+        $this->requireJs('assets/Bcl4/InputMask/script.js');
         $this->setClass(trim('input-mask '.$mask['class']));
         $this->att('data-imask', $mask['id']);
     }

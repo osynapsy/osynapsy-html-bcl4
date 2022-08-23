@@ -27,7 +27,7 @@ class Accordion extends Component
         $this->requireCss('assets/Bcl4/Accordion/style.css');
         $this->att('class','accordion osy-panel-accordion')
              ->att('role','tablist');
-        $this->requireCss('assets/Bcl/PanelAccordion/style.css');
+        $this->requireCss('assets/Bcl4/PanelAccordion/style.css');
         //$this->requireJs('Bcl/PanelAccordion/script.js');
         $memoryOpen = filter_input(\INPUT_POST, $this->id);
         $this->defaultOpen = is_null($memoryOpen) ? $defaultOpen : $memoryOpen;

@@ -24,7 +24,7 @@ class Multiselect extends ComboBox
         parent::__construct($name);
         $this->requireCss('assets/Lib/boostrap-multiselect-2.0/bootstrap-multiselect.css');
         $this->requireJs('assets/Lib/boostrap-multiselect-2.0/bootstrap-multiselect.js');
-        $this->requireJs('assets/Bcl/Multiselect/script.js');
+        $this->requireJs('assets/Bcl4/Multiselect/script.js');
         $this->setClass('osy-multiselect')->att('multiple','multiple');
         $this->setParameter('option-select-disable',true);
     }
