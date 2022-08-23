@@ -19,7 +19,7 @@
     },
     "autoload" : {
         "psr-4": {
-            "Osynapsy\\Bcl4\\": "src/"
+            "Osynapsy\\Bcl4\\": "src/Osynapsy/Bcl4/"
         }
     }
 }
