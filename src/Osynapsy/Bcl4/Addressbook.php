@@ -12,14 +12,13 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Bcl\PanelNew;
 
 /**
  * Description of Adressbook
  *
  * @author Peter
  */
-class Addressbook extends PanelNew
+class Addressbook extends Panel
 {
     protected $columns = 4;
     protected $foot;
