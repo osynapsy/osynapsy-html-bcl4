@@ -54,8 +54,12 @@ class Card extends Component
 
     protected function __build_extra__()
     {
-        $this->add($this->buildTitle());
-        $this->buildCommands();
+        if (!empty($this->title)) {
+            $this->add($this->buildTitle());
+        }
+        if (!empty($this->commands)) {
+            $this->buildCommands();
+        }
         $this->att('class', $this->classCss['main']);
         foreach ($this->sections as $key => $section){
             if (empty($section)) {
@@ -68,12 +72,7 @@ class Card extends Component
 
     protected function buildCommands()
     {
-        if (empty($this->commands)) {
-            return;
-        }
-        $container = $this->getHead()->add(
-            new Tag('div', null, 'panel-commands pull-right')
-        );
+        $container = $this->getHead()->add(new Tag('div', null, 'panel-commands pull-right'));
         foreach($this->commands as $command) {
             $container->add($command);
         }
@@ -81,16 +80,13 @@ class Card extends Component
 
     protected function buildTitle()
     {
-        if (empty($this->title)) {
-            return;
-        }
-        $titleContainer = new Tag('div', null, $this->classCss['title']);
-        $titleContainer->add($this->title);
+        $container = new Tag('div', null, $this->classCss['title']);
+        $container->add($this->title);
         if ($this->collapsable) {
-            $titleContainer->add('&nbsp;');
-            $titleContainer->add($this->collapsableCommandFactory());
+            $container->add('&nbsp;');
+            $container->add($this->collapsableCommandFactory());
         }
-        return $titleContainer;
+        return $container;
     }
 
     protected function collapsableCommandFactory()
@@ -130,7 +126,7 @@ class Card extends Component
     public function getHead()
     {
         if (empty($this->sections['header'])) {
-            $this->sections['header'] = new Tag('div');
+            $this->sections['header'] = new Tag('div', null, 'd-flex');
         }
         return $this->sections['header'];
     }
@@ -196,29 +192,26 @@ class Card extends Component
 
     public function setText($text)
     {
-        if (empty($text)) {
-            return;
+        if (!empty($text)) {
+            $this->getBody()->add(sprintf('<p class="card-text">%s</p>', $text));
         }
-        $this->getBody()->add('<p class="card-text">'.$text.'</p>');
     }
 
-    public function setTitle($title, $tag = 'h5', $class = '')
+    public function setInsideTitle($title, $tag = 'h5', $class = '')
     {
         $this->getBody()->add(new Tag($tag, null, trim('card-title '.$class)))->add($title);
     }
 
-    public function setTitleOnHead($title, array $commands = [])
+    public function setTitle($title, array $commands = [])
     {
-        $titleContainer = $this->getHead()->add(new Tag('div', null, 'float-left'));
-        $titleContainer->add($title);
+        $titleContainer = $this->getHead()->add(new Tag('div', null, 'd-flex'));
+        $titleContainer->add(new Tag('div', null, 'card-title-label'))->add($title);
         if ($this->collapsable) {
-            $titleContainer->add('&nbsp');
             $titleContainer->add($this->collapsableCommandFactory());
         }
-        if (empty($commands)) {
-            return;
+        if (!empty($commands)) {
+            $this->getHead()->add(new Tag('div', null, 'ml-float'))->addFromArray($commands);
         }
-        $this->getHead()->add(new Tag('div', null, 'float-right'))->addFromArray($commands);
     }
 
     public function setCommand($command)
