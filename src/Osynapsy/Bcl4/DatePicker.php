@@ -41,12 +41,12 @@ class DatePicker extends Component
 
     public static function pushRequirement($object, $bootstrapVersion)
     {
-        self::requireFile($object, 'asstes/Lib/momentjs-2.17.1/moment.js', 'js');
-        self::requireFile($object, 'asstes/Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.js', 'js');
-        self::requireFile($object, 'asstes/Bcl/DatePicker/script.js', 'js');
-        self::requireFile($object, 'asstes/Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.css', 'js');
+        self::requireFile($object, 'assets/Lib/momentjs-2.17.1/moment.js', 'js');
+        self::requireFile($object, 'assets/Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.js', 'js');
+        self::requireFile($object, 'assets/Bcl/DatePicker/script.js', 'js');
+        self::requireFile($object, 'assets/Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.css', 'js');
         if ($bootstrapVersion !== self::BS3_VER) {
-            self::requireFile($object, 'asstes/Lib/glyphicons-bs-3.3.7/style.css', 'css');
+            self::requireFile($object, 'assets/Lib/glyphicons-bs-3.3.7/style.css', 'css');
         }
     }
 
