@@ -36,16 +36,11 @@ class Form extends Component
     protected $footRight;
     protected $headCommand;
 
-    public function __construct($name, $mainComponent = 'PanelTk', $tag = 'form', $bsv = 4)
+    public function __construct($name, $mainComponent = 'PanelTk', $tag = 'form')
     {
         parent::__construct($tag, $name);
-        //Form setting
         $this->att(['name' => $name, 'method' => 'post', 'role' => 'form']);
-        //Body setting
         $this->body = $this->buildMainComponent($mainComponent);
-        if ($mainComponent === 'PanelTk' && $bsv === 4) {
-            $this->body->setClasses('card', 'card-header', 'card-body', 'card-footer');
-        }
     }
 
     protected function __build_extra__()
@@ -187,6 +182,15 @@ class Form extends Component
 
     public function resetClass()
     {
-        $this->body->setClasses('', '', '', '');
+        if (method_exists($this->body, 'setClasses')) {
+            $this->body->setClasses('', '', '', '');
+        }
+    }
+
+    public function showBackground()
+    {
+        if (method_exists($this->body, 'setClasses')) {
+            $this->body->setClasses('card', 'card-header', 'card-body', 'card-footer');
+        }
     }
 }
