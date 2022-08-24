@@ -13,7 +13,6 @@ namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Component;
 use Osynapsy\Html\Tag;
-use Osynapsy\Data\Dictionary;
 
 /**
  * Represents a Html Form.
@@ -35,14 +34,11 @@ class Form extends Component
     protected $footStyle;
     protected $footLeft;
     protected $footRight;
-    protected $repo;
     protected $headCommand;
-    protected $appendFootToMain = false;
 
     public function __construct($name, $mainComponent = 'PanelTk', $tag = 'form', $bsv = 4)
     {
         parent::__construct($tag, $name);
-        $this->repo = new Dictionary(['foot' => ['offset' => 1, 'width' => 10]]);
         //Form setting
         $this->att(['name' => $name, 'method' => 'post', 'role' => 'form']);
         //Body setting
@@ -63,17 +59,6 @@ class Form extends Component
         $this->add($this->body);
         //Append foot
         if (!$this->foot) {
-            return;
-        }
-        if ($this->appendFootToMain) {
-            $this->body->put(
-                '',
-                $this->foot->get(),
-                10000,
-                10,
-                $this->repo->get('foot.width'),
-                $this->repo->get('foot.offset')
-            );
             return;
         }
         $this->add($this->foot->get());
@@ -200,15 +185,6 @@ class Form extends Component
             $column->add('<h4><i>'.$subTitle.'</i></h4>');
         }
         return $objTitle;
-    }
-
-    public function parameter($key, $value=null)
-    {
-        if (is_null($value)){
-            return $this->repo->get($key);
-        }
-        $this->repo->set($key, $value);
-        return $this;
     }
 
     public function resetClass()
