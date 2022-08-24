@@ -50,7 +50,7 @@ class Tab extends Component
         }
         $li = $this->ul->add(new Tag('li', null, 'nav-item'))->att('role','presentation');
         $li->add('<a href="'.$cardId.'" data-toggle="tab" class="nav-link'.$selectedClassLink.'">'.$title.'</a>');
-        $this->currentCard = $this->tabContent->add(new Panel(substr($cardId,1)))->setClass('tab-pane fade'.$selectedClassPanel);
+        $this->currentCard = $this->tabContent->add(new PanelTk(substr($cardId,1)))->setClass('tab-pane fade'.$selectedClassPanel);
         return $this->currentCard;
     }
 
