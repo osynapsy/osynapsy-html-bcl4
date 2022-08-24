@@ -13,7 +13,7 @@ namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Component;
 use Osynapsy\Html\Tag;
-use Osynapsy\Db\PaginatorSimple;
+use Osynapsy\Database\PaginatorSimple;
 use Osynapsy\Ocl\HiddenBox;
 
 /**
