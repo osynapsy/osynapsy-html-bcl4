@@ -57,11 +57,9 @@ class Form extends Component
             $this->add($this->alert);
         }
         $this->add($this->body);
-        //Append foot
-        if (!$this->foot) {
-            return;
+        if ($this->foot) {
+            $this->add($this->foot);
         }
-        $this->add($this->foot->get());
     }
 
     protected function buildMainComponent($mainComponent)
