@@ -58,24 +58,24 @@ class Card extends Component
             $this->add($this->buildTitle());
         }
         if (!empty($this->commands)) {
-            $this->buildCommands();
+            $this->getHead()->add($this->buildCommands());
         }
         $this->att('class', $this->classCss['main']);
         foreach ($this->sections as $key => $section){
-            if (empty($section)) {
-                continue;
+            if (!empty($section)) {
+                $section->addClass($this->classCss[$key]);
+                $this->add($section);
             }
-            $section->att('class', $this->classCss[$key]);
-            $this->add($section);
         }
     }
 
     protected function buildCommands()
     {
-        $container = $this->getHead()->add(new Tag('div', null, 'panel-commands pull-right'));
+        $container = new Tag('div', null, 'ml-auto p2 panel-commands');
         foreach($this->commands as $command) {
             $container->add($command);
         }
+        return $container;
     }
 
     protected function buildTitle()
@@ -210,14 +210,14 @@ class Card extends Component
             $titleContainer->add($this->collapsableCommandFactory());
         }
         if (!empty($commands)) {
-            $this->getHead()->add(new Tag('div', null, 'ml-float'))->addFromArray($commands);
+            $this->getHead()->add(new Tag('div', null, 'ml-auto p2'))->addFromArray($commands);
         }
     }
 
     public function setCommand($command)
     {
         $this->setClass('position-relative mr-3');
-        $container = $this->add(new Tag('div', null, 'card-command position-absolute'));
+        $container = $this->add(new Tag('div', null, 'card-command ml-auto'));
         $container->att('style', 'top: 5px; right: 5px;')->add($command);
     }
 
