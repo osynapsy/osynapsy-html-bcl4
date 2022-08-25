@@ -26,7 +26,7 @@ class Gallery extends Component
     public function __construct($id, $cellWidth = 4)
     {
         parent::__construct('div', $id);
-        $this->requireJs('assets/Bcl4/FileBox/script.js');
+        $this->requireJs('Bcl4/FileBox/script.js');
         $this->add(new Tag('span', null, 'gallery'));
         $this->cellWidth = $cellWidth;
     }

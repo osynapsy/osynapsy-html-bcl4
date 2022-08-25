@@ -28,8 +28,8 @@ class Autocomplete extends Component
 
     public function __construct($id, $db = null)
     {
-        $this->requireJs('assets/Bcl4/Autocomplete/script.js');
-        $this->requireCss('assets/Bcl4/Autocomplete/style.css');
+        $this->requireJs('Bcl4/Autocomplete/script.js');
+        $this->requireCss('Bcl4/Autocomplete/style.css');
         $this->db = $db;
         parent::__construct('div', $id);
     }

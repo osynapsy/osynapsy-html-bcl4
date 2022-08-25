@@ -24,8 +24,8 @@ class PanelAccordion extends Component
         parent::__construct('div', $id);
         $this->att('class','panel-group osy-panel-accordion')
              ->att('role','tablist');
-        $this->requireCss('assets/Bcl4/PanelAccordion/style.css');
-        $this->requireJs('assets/Bcl4/PanelAccordion/script.js');
+        $this->requireCss('Bcl4/PanelAccordion/style.css');
+        $this->requireJs('Bcl4/PanelAccordion/script.js');
     }
 
     public function __build_extra__()

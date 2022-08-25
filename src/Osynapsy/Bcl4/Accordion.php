@@ -24,10 +24,10 @@ class Accordion extends Component
     public function __construct($id, $defaultOpen = 0)
     {
         parent::__construct('div', $id);
-        $this->requireCss('assets/Bcl4/Accordion/style.css');
+        $this->requireCss('Bcl4/Accordion/style.css');
         $this->att('class','accordion osy-panel-accordion')
              ->att('role','tablist');
-        $this->requireCss('assets/Bcl4/PanelAccordion/style.css');
+        $this->requireCss('Bcl4/PanelAccordion/style.css');
         //$this->requireJs('Bcl4/PanelAccordion/script.js');
         $memoryOpen = filter_input(\INPUT_POST, $this->id);
         $this->defaultOpen = is_null($memoryOpen) ? $defaultOpen : $memoryOpen;

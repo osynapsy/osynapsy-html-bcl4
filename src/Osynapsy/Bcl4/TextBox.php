@@ -135,7 +135,7 @@ class TextBox extends \Osynapsy\Ocl\TextBox
 
     public function setMaskRaw($maskraw)
     {
-        $this->requireJs('assets/Lib/inputmask-5.0.0-beta/dist/jquery.inputmask.js');
+        $this->requireJs('Lib/inputmask-5.0.0-beta/dist/jquery.inputmask.js');
         $this->requireJsCode("$(':input').inputmask();");
         $this->att('data-inputmask', $maskraw);
         return $this;
@@ -147,8 +147,8 @@ class TextBox extends \Osynapsy\Ocl\TextBox
             throw new \Exception("TextBox {$this->id} : iMask format {$iMaskId} not regnized");
         }
         $mask = $this->imask[$iMaskId];
-        $this->requireJs('assets/Lib/imask-6.0.5/imask.js');
-        $this->requireJs('assets/Bcl4/InputMask/script.js');
+        $this->requireJs('Lib/imask-6.0.5/imask.js');
+        $this->requireJs('Bcl4/InputMask/script.js');
         $this->setClass(trim('input-mask '.$mask['class']));
         $this->att('data-imask', $mask['id']);
     }

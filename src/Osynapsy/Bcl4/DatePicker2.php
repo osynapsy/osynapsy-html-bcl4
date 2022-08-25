@@ -50,10 +50,10 @@ class DatePicker2 extends Component
 
     public static function pushRequirement($object)
     {
-        self::requireFile($object, 'assets/Lib/tempusdominus-5.38.0/style.css', 'css');
-        self::requireFile($object, 'assets/Lib/momentjs-2.17.1/moment.js', 'js');
-        self::requireFile($object, 'assets/Lib/tempusdominus-5.38.0/script.js', 'js');
-        self::requireFile($object, 'assets/Bcl4/DatePicker/script.js', 'js');
+        self::requireFile($object, 'Lib/tempusdominus-5.38.0/style.css', 'css');
+        self::requireFile($object, 'Lib/momentjs-2.17.1/moment.js', 'js');
+        self::requireFile($object, 'Lib/tempusdominus-5.38.0/script.js', 'js');
+        self::requireFile($object, 'Bcl4/DatePicker/script.js', 'js');
     }
 
     protected function __build_extra__()

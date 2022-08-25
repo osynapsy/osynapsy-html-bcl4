@@ -23,8 +23,8 @@ class ComboBox extends \Osynapsy\Ocl\ComboBox
     {
         $this->addClass('selectpicker');
         $this->att('data-live-search', 'true');
-        $this->requireCss('assets/Bcl4/ComboBox/bootstrap-select.css');
-        $this->requireJs('assets/Bcl4/ComboBox/bootstrap-select.js');
+        $this->requireCss('Bcl4/ComboBox/bootstrap-select.css');
+        $this->requireJs('Bcl4/ComboBox/bootstrap-select.js');
     }
 
     public function setSmallSize()

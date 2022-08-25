@@ -26,8 +26,8 @@ class ListTree extends ListBox
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->requireJs('assets/Bcl4/ListBox/script.js');
-        $this->requireCss('assets/Bcl4/ListBox/style.css');
+        $this->requireJs('Bcl4/ListBox/script.js');
+        $this->requireCss('Bcl4/ListBox/style.css');
     }
 
     protected function __build_extra__()
