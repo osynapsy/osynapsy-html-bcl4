@@ -1,5 +1,5 @@
 <?php
-namespace Osynapsy\Html\Bcl4;
+namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Component;
 use Osynapsy\Html\Tag;
