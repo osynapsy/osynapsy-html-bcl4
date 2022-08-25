@@ -24,7 +24,7 @@ use Osynapsy\Bcl4\IPagination;
  *
  * @author Pietro Celeste
  */
-class Pagination extends Component implements IPagination
+class Pagination2 extends Component implements IPagination
 {
     private $entity = 'record';
     protected $data = [];
