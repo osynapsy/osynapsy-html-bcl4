@@ -11,12 +11,12 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
-use Osynapsy\Ocl\HiddenBox;
 use Osynapsy\Html\Tag;
+use Osynapsy\Html\Component;
+use Osynapsy\Database\Paginator;
+use Osynapsy\Ocl\HiddenBox;
 use Osynapsy\Bcl4\Link;
 use Osynapsy\Bcl4\ComboBox;
-use Osynapsy\Database\Paginator;
 use Osynapsy\Bcl4\IPagination;
 
 /**
