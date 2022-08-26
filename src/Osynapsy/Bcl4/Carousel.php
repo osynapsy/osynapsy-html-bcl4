@@ -1,34 +1,36 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of the Osynapsy package.
+ *
+ * (c) Pietro Celeste <p.celeste@osynapsy.org>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-namespace Osynapsy\Html\Bcl4;
+namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
-use Osynapsy\Html\Ocl\HiddenBox;
 use Osynapsy\Html\Tag;
+use Osynapsy\Html\Component;
 
 /**
  * Description of Carousel
  *
- * @author pietr
+ * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
 class Carousel extends Component
 {
-    private $showCommands; 
+    private $showCommands;
     private $showIndicators;
-    
+
     public function __construct($id, $showCommands = false, $showIndicators = false)
     {
         parent::__construct('div', $id);
         $this->showCommands = $showCommands;
         $this->showIndicators = $showIndicators;
     }
-    
+
     protected function __build_extra__()
     {
         if (!empty($this->data)) {
@@ -48,7 +50,7 @@ class Carousel extends Component
             $this->buildCommands($inner);
         }
     }
-    
+
     private function buildItem($rec)
     {
         $div = new Tag('div', null, 'carousel-item');
@@ -56,7 +58,7 @@ class Carousel extends Component
         $this->buildItemCaption($rec, $div);
         return $div;
     }
-    
+
     private function buildItemCaption($rec, $item)
     {
         if (empty($rec)) {
@@ -71,14 +73,14 @@ class Carousel extends Component
             $caption->add(new Tag('p'))->add($text[1]);
         }
     }
-    
+
     private function buildCommands($inner)
     {
         foreach(['prev','next'] as $cmd) {
             $a = $inner->add(new Tag('a', null, 'carousel-control-'.$cmd));
             $a->att([
-                'href' => "#carouselExampleControls", 
-                'role'=> "button", 
+                'href' => "#carouselExampleControls",
+                'role'=> "button",
                 'data-slide' => "prev"
             ]);
             $a->add(new Tag('span', null, "carousel-control-{$cmd}-icon"))
@@ -86,7 +88,7 @@ class Carousel extends Component
             $a->add(new Tag('span', null, 'sr-only'))->add($cmd);
         }
     }
-    
+
     private function buildIndicators()
     {
         $ol = $this->add(new Tag('ol', null, 'carousel-indicators'));
