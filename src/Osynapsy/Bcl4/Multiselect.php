@@ -12,10 +12,11 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Ocl\ComboBox;
+
 /**
  * Description of Multiselect
  *
- * @author p.celeste@osynapsy.org
+ * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
 class Multiselect extends ComboBox
 {
