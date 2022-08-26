@@ -1,9 +1,12 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of the Osynapsy package.
+ *
+ * (c) Pietro Celeste <p.celeste@osynapsy.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Osynapsy\Bcl4;
@@ -14,7 +17,7 @@ use Osynapsy\Html\Component;
 /**
  * Description of InputGroup
  *
- * @author Pietro
+ * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
 
 class InputGroup extends Component
@@ -22,12 +25,12 @@ class InputGroup extends Component
     protected $textBox;
     protected $postfix;
     protected $prefix;
-    
+
     public function __construct($name, $prefix = null, $postfix = null, $dimension = null)
     {
         parent::__construct('div');
         $this->setClass('input-group');
-        $this->prepend($prefix);                
+        $this->prepend($prefix);
         if (is_object($name)) {
             $this->textBox = $name;
         } else {
@@ -37,7 +40,7 @@ class InputGroup extends Component
         $this->append($postfix);
         $this->setDimension($dimension);
     }
-    
+
     public function __build_extra__(): void
     {
         if (!empty($this->prefix)) {
@@ -48,7 +51,7 @@ class InputGroup extends Component
             $this->add($this->postfix);
         }
     }
-    
+
     public function prepend($prefix)
     {
         if (empty($prefix)) {
@@ -59,7 +62,7 @@ class InputGroup extends Component
         }
         return $this->getPrefix()->add(new Tag('span', null, 'input-group-text'))->add($prefix);
     }
-    
+
     public function append($postfix)
     {
         if (empty($postfix)) {
@@ -70,12 +73,12 @@ class InputGroup extends Component
          }
         $this->getPostfix()->add(new Tag('span', null, 'input-group-text'))->add($postfix);
     }
-   
+
     public function getTextBox()
     {
         return $this->textBox;
     }
-    
+
     public function getPostfix()
     {
         if (empty($this->postfix)) {
@@ -83,7 +86,7 @@ class InputGroup extends Component
         }
         return $this->postfix;
     }
-    
+
     public function getPrefix()
     {
         if (empty($this->prefix)) {
@@ -91,7 +94,7 @@ class InputGroup extends Component
         }
         return $this->prefix;
     }
-    
+
     public function setDimension($dimension)
     {
         if (empty($dimension)) {
@@ -99,7 +102,7 @@ class InputGroup extends Component
         }
         $this->setClass('input-group-'.$dimension);
     }
-    
+
     public function setSmallSize()
     {
         $this->setDimension('sm');
