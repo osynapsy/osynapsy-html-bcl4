@@ -12,7 +12,7 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Bcl\Alert;
+use Osynapsy\Bcl4\Alert;
 
 class Container extends Tag
 {
