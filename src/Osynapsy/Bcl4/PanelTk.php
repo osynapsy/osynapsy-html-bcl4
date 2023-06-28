@@ -12,17 +12,18 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag as Tag;
-use Osynapsy\Html\Component as Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
 /**
  * Build a html panel. Ispirate to thinker python panel
  *
  */
-class PanelTk extends Component
+class PanelTk extends AbstractComponent
 {
     const FORM_TYPE_HORIZONTAL = 'horizontal';
 
     private $cells = [];
+    protected $labelPosition;
     private $currentRow = null;
     private $tag = ['div' , 'div'];
     private $formType = 'normal';
@@ -41,7 +42,7 @@ class PanelTk extends Component
     public function __construct($id, $tag = 'fieldset', $rowClass = null, $cellClass = null)
     {
         parent::__construct($tag, $id);
-        $this->setParameter('label-position','outside');
+        $this->labelPosition = 'outside';
         if (!empty($rowClass)) {
             $this->classes['row'] = $rowClass;
         }
@@ -50,9 +51,9 @@ class PanelTk extends Component
         }
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
-        $this->setClass($this->getClass('main'));
+        $this->addClass($this->getClass('main'));
         $this->bodyFactory();
         if ($this->head) {
             $this->add($this->head);
@@ -79,15 +80,14 @@ class PanelTk extends Component
     private function appendRow()
     {
         $this->currentRow = $this->append(new Tag($this->tag[0]));
-        $this->currentRow->att('class', $this->classes['row']);
+        $this->currentRow->attribute('class', $this->classes['row']);
         return $this->currentRow;
     }
 
     public function appendToHead($title, $dim = 0)
     {
         if (empty($this->head)) {
-            $this->head = new Tag('div');
-            $this->head->att('class', $this->classes['head']);
+            $this->head = new Tag('div', null, $this->classes['head']);
         }
         if ($dim) {
             $this->head->add(new Tag('h'.$dim))->add($title);
@@ -170,7 +170,7 @@ class PanelTk extends Component
         }
         $container = new Tag('div');
         $label = $container->add(new Tag('label', null, $this->buildLabelClass($cellContent)));
-        $label->att('for', is_a($cellContent, 'Tag') ? $cellContent->id : '');
+        $label->attribute('for', is_a($cellContent, 'Tag') ? $cellContent->id : '');
         $label->add(trim($cellLabel));
         if (is_array($rawCellLabel)) {
             $container->addFromArray($rawCellLabel);
@@ -198,7 +198,7 @@ class PanelTk extends Component
     public function put($lbl, $obj, $row = 0, $col = 0, $width=1, $offset = null, $class = '')
     {
         if ($obj instanceof Tag) {
-            $obj->att('data-label', strip_tags(is_array($lbl) ? $lbl[0] : $lbl));
+            $obj->attribute('data-label', strip_tags(is_array($lbl) ? $lbl[0] : $lbl));
         }
         $this->cells[$row][$col][] = [
             'lbl' => $lbl,
@@ -227,6 +227,11 @@ class PanelTk extends Component
         $this->setClassPart('foot', $foot);
         $this->setClassPart('row', $row);
         $this->setClassPart('cell', $cell);
+    }
+
+    public function setLabelPosition($position)
+    {
+        $this->labelPosition = $position;
     }
 
     public function setType($type)

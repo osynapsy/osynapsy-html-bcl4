@@ -11,10 +11,10 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
-class Modal extends Component
+class Modal extends AbstractComponent
 {
     public $content;
     public $header;
@@ -29,11 +29,11 @@ class Modal extends Component
     public function __construct($id, $title = '', $type = '')
     {
         parent::__construct('div',$id);
-        $this->att('class','modal fade')->att('tabindex','-1')->att('role','dialog');
+        $this->attribute('class','modal fade')->attribute('tabindex','-1')->attribute('role','dialog');
         $this->content = $this->add(new Tag('div', null, trim('modal-dialog '.$type)))
                               ->add(new Tag('div', null, 'modal-content'));
         $this->header = $this->content->add(new Tag('div', null, 'modal-header'));
-        $this->title = $this->header->add(new Tag('h5'))->att('class','modal-title');
+        $this->title = $this->header->add(new Tag('h5'))->attribute('class','modal-title');
         $this->header->add('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
         $this->title->add($title);
         $this->body = $this->content->add(new Tag('div', null, 'modal-body'));
@@ -73,14 +73,14 @@ class Modal extends Component
     public function addCommand(array $left = [],array $right = [], $addCloseCommand = true)
     {
         if (empty($this->columnCommandLeft)) {
-            $this->columnCommandLeft = $this->getPanelFoot()->addColumn(6)->setXs(6)->setClass('text-left');
+            $this->columnCommandLeft = $this->getPanelFoot()->addColumn(6)->setXs(6)->addClass('text-left');
         }
         if (empty($this->columnCommandRight)) {
-            $this->columnCommandRight = $this->getPanelFoot()->addColumn(6)->setXs(6)->setClass('text-right');
+            $this->columnCommandRight = $this->getPanelFoot()->addColumn(6)->setXs(6)->addClass('text-right');
         }
         if ($addCloseCommand){
             $ButtonClose = new Button('btnClose'.$this->id,'button', 'Chiudi');
-            $ButtonClose->att('onclick',"\$('#{$this->id}').modal('hide');");
+            $ButtonClose->attribute('onclick',"\$('#{$this->id}').modal('hide');");
             array_push($left, $ButtonClose);
         }
         $this->columnCommandLeft->addFromArray($left);

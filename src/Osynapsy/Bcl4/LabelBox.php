@@ -11,29 +11,26 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\InputHidden;
 
-class LabelBox extends Component
+class LabelBox extends AbstractComponent
 {
     protected $hiddenBox;
     protected $label;
 
     public function __construct($id, $label='')
-    {
-        $this->requireCss('Bcl4/LabelBox/style.css');
+    {        
         parent::__construct('div', $id.'_labelbox');
-        $this->att('class','osynapsy-labelbox');
-        $this->hiddenBox = $this->add(new HiddenBox($id));
+        $this->requireCss('Bcl4/LabelBox/style.css');
+        $this->addClass('osynapsy-labelbox');
+        $this->hiddenBox = $this->add(new InputHidden($id));
         $this->add($label);
     }
 
-    public function setValue($value, $force = false)
-    {
-        if (!$force && !empty($_REQUEST[$this->hiddenBox->id])) {
-            return $this;
-        }
-        $_REQUEST[$this->hiddenBox->id] = $value;
+    public function setValue($value)
+    {        
+        $this->hiddenBox->setValue($value);
         return $this;
     }
 
@@ -48,7 +45,7 @@ class LabelBox extends Component
         return $this;
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
         if (is_null($this->label)) {
             $label = isset($_REQUEST[$this->hiddenBox->id]) ? $_REQUEST[$this->hiddenBox->id] : null;

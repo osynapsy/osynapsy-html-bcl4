@@ -11,11 +11,13 @@
 
 namespace Osynapsy\Bcl4;
 
-class ComboBoxTree extends Osynapsy\Ocl\ComboBoxTree
+use Osynapsy\Html\Component\ComboBoxTree as BaseComboBoxTree;
+
+class ComboBoxTree extends BaseComboBoxTree
 {
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->setClass('form-control');
-    }
+        $this->addClass('form-control');
+    }   
 }

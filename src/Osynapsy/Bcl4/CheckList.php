@@ -11,13 +11,14 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Ocl\CheckList as OclCheckList;
+use Osynapsy\Html\Component\CheckList as BaseCheckList;
+use Osynapsy\Html\DOM;
 
 /**
  * Build a list of check
  *
  */
-class CheckList extends OclCheckList
+class CheckList extends BaseCheckList
 {
     /**
      *
@@ -26,6 +27,6 @@ class CheckList extends OclCheckList
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->requireCss('Bcl4/CheckList/style.css');
+        DOM::requireCss('Bcl4/CheckList/style.css');
     }
 }

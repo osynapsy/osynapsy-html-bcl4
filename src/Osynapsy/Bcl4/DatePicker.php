@@ -11,53 +11,44 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
-class DatePicker extends Component
-{
-    const BS4_VER = '4';
-    const BS3_VER = '3';
-
+class DatePicker extends AbstractComponent
+{    
     private $datePickerId;
     private $dateComponent;
-    private $format = 'DD/MM/YYYY';
+    protected $defaultValue;
 
-    public function __construct($id, $bootstrapVersion = '4')
-    {
+    public function __construct($id, $format = 'DD/MM/YYYY')
+    {               
+        parent::__construct('div', $id.'_datepicker');
         $this->datePickerId = $id;
-        $this->pushRequirement($this, $bootstrapVersion);
-        parent::__construct('div',$id.'_datepicker');
-        $this->att('class','input-group');
-        $this->dateComponent = $this->add(new TextBox($id))->att('class','date date-picker form-control');
-        switch ($bootstrapVersion) {
-            case self::BS4_VER:
-                $this->add('<div class="input-group-append"><span class="input-group-text"><i class="glyphicon glyphicon-calendar"></i></span></div>');
-                break;
-            default:
-                $this->add('<span class="input-group-append"><span class="glyphicon glyphicon-calendar"></span></span>');
-                break;
-        }
+        $this->requireCss('Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.css');
+        $this->requireJs('Lib/momentjs-2.17.1/moment.js');
+        $this->requireJs('Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.js');
+        $this->requireJs('Bcl4/DatePicker/script.js');
+        $this->addClass('input-group');
+        $this->dateComponent = $this->add($this->textBoxFactory($id));
+        $this->add($this->iconFactory());
+        $this->setFormat($format);
     }
 
-    public static function pushRequirement($object, $bootstrapVersion)
+    protected function textBoxFactory($id)
     {
-        if ($bootstrapVersion !== self::BS3_VER) {
-            self::requireFile($object, 'Lib/glyphicons-bs-3.3.7/style.css', 'css');
-        }
-        self::requireFile($object, 'Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.css', 'css');
-        self::requireFile($object, 'Lib/momentjs-2.17.1/moment.js', 'js');
-        self::requireFile($object, 'Lib/bootstrap-datetimejs-4.17.37/bootstrap-datetimejs.js', 'js');
-        self::requireFile($object, 'Bcl4/DatePicker/script.js', 'js');
+        $TextBox = new TextBox($id);
+        $TextBox->addClass('date date-picker form-control');
+        return $TextBox;
     }
 
-    protected function __build_extra__()
+    protected function iconFactory()
     {
-        $this->dateComponent->att('data-format', $this->format);
-        if (!empty($_REQUEST[$this->datePickerId])) {
-            $data = explode('-', $_REQUEST[$this->datePickerId]);
-            if (count($data) >= 3 && strlen($data[0]) == 4) {
-                $_REQUEST[$this->datePickerId] = $data[2].'/'.$data[1].'/'.$data[0];
-            }
+        return '<div class="input-group-append"><span class="input-group-text"><i class="glyphicon glyphicon-calendar"></i></span></div>';
+    }
+
+    public function preBuild()
+    {
+        if (!empty($this->defaultValue) && empty($this->getTextBox()->getValue())) {
+            $this->getTextBox()->setValue($this->defaultValue);
         }
     }
 
@@ -97,15 +88,12 @@ class DatePicker extends Component
 
     public function setFormat($format)
     {
-        $this->format = $format;
+        $this->dateComponent->attribute('data-format', $format);
     }
 
     public function setDefaultDate($date = null)
-    {
-        if (!empty($_REQUEST[$this->datePickerId])) {
-            return;
-        }
-        $_REQUEST[$this->datePickerId] = empty($date) ? date('d/m/Y') : $date;
+    {        
+        $this->defaultValue = empty($date) ? date('d/m/Y') : $date;
     }
 
     public function setDisabled($condition)

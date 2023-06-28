@@ -12,9 +12,9 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
-class ContextMenu extends Component
+class ContextMenu extends AbstractComponent
 {
     private $actions = array();
     private $ul;

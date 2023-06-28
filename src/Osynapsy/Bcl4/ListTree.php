@@ -15,8 +15,8 @@ use Osynapsy\Html\Tag;
 
 class ListTree extends ListBox
 {
-    private $groups = array();
-    public $data = array();
+    private $groups = [];
+    public $data = [];
     private $request = null;
     private $icon = [
         'open' => 'fa fa-chevron-down',
@@ -30,7 +30,7 @@ class ListTree extends ListBox
         $this->requireCss('Bcl4/ListBox/style.css');
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         $this->request = empty($_REQUEST[$this->id]) ? null : $_REQUEST[$this->id];
         array_unshift($this->data,array('','- seleziona -'));
@@ -42,16 +42,13 @@ class ListTree extends ListBox
         if (!$branch) {
             return null;
         }
-        $ul = new Tag('ul');
-        $ul->att('class',$class);
-
+        $ul = new Tag('ul', null, $class);
         foreach ($branch as $rec) {
             $hasSublist = array_key_exists($rec[0], $this->groups);
             $li = $ul->add(new Tag('li'));
-            $li->add(new Tag('div'))
-               ->att('value',$rec[0])
-               ->att('class','listbox-list-item'.($rec[0] == $this->request ? ' selected': ''))
-               ->add(($hasSublist ? '<small><span class="'.$this->icon['close'].'"></span></small> ': '').$rec[1]);
+            $li->add(new Tag('div', null, 'class','listbox-list-item'.($rec[0] == $this->request ? ' selected': '')));
+            $li->attribute('value',$rec[0]);
+            $li->add(($hasSublist ? '<small><span class="'.$this->icon['close'].'"></span></small> ': '').$rec[1]);
             if ($hasSublist) {
                 if ($childs = $this->buildBranch($this->groups[$rec[0]], 'listbox-sublist hidden d-none')) {
                     $li->add($childs);

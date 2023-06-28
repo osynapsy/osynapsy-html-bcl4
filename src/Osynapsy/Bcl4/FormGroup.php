@@ -11,10 +11,10 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
-class FormGroup extends Component
+class FormGroup extends AbstractComponent
 {
     public $label;
     public $object;
@@ -24,13 +24,13 @@ class FormGroup extends Component
     public function __construct($object, $label = '&nbsp;', $class = 'form-group', $labelClass = 'font-weight-500 text-nowrap')
     {
         parent::__construct('div');
-        $this->att('class', $class);
+        $this->attribute('class', $class);
         $this->label = $label;
         $this->labelClass = $labelClass;
         $this->object = $object;
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
         if (!empty($this->label)) {
             $this->add($this->labelFactory());
@@ -46,7 +46,7 @@ class FormGroup extends Component
         $div = new Tag('div', null, 'd-flex');
         $label = $div->add(new Tag('label', null, sprintf('%s mr-auto', $this->labelClass)));
         if (is_object($this->object)) {
-            $label->att('for',$this->object->id);
+            $label->attribute('for',$this->object->id);
         }
         if (!is_array($this->label)) {
             $label->add($this->label);

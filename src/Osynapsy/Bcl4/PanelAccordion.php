@@ -11,26 +11,26 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component as Component;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\InputHidden;
 
 //Costruttore del pannello html
-class PanelAccordion extends Component
+class PanelAccordion extends AbstractComponent
 {
     private $panels = array();
 
     public function __construct($id)
-    {
+    {        
         parent::__construct('div', $id);
-        $this->att('class','panel-group osy-panel-accordion')
-             ->att('role','tablist');
         $this->requireCss('Bcl4/PanelAccordion/style.css');
         $this->requireJs('Bcl4/PanelAccordion/script.js');
+        $this->addClass('panel-group osy-panel-accordion');
+        $this->attribute('role', 'tablist');
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
-        $this->add(new HiddenBox($this->id));
+        $this->add(new InputHidden($this->id));
         foreach($this->panels as $panel) {
             $this->add($panel);
         }
@@ -46,7 +46,7 @@ class PanelAccordion extends Component
              ->addCommands($commands)
              ->getBody()
              ->att('id', $panelId.'-body');
-        $this->panels[$panelIdx]->setClass('panel-body collapse' .(filter_input(\INPUT_POST, $this->id) == $panelIdx ? ' in' : ''));
+        $this->panels[$panelIdx]->addClass('panel-body collapse' .(filter_input(\INPUT_POST, $this->id) == $panelIdx ? ' in' : ''));
         return $this->panels[$panelIdx];
     }
 }

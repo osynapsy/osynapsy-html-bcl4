@@ -11,7 +11,7 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
 /**
@@ -19,7 +19,7 @@ use Osynapsy\Html\Tag;
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class Grid extends Component
+class Grid extends AbstractComponent
 {
     protected $cellSize = 4;
     protected $cellClass = ['border', 'p-3', 'rounded'];

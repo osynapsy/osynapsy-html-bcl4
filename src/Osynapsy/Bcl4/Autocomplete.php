@@ -11,62 +11,69 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\Component\InputHidden;
 
-class Autocomplete extends Component
+class Autocomplete extends AbstractComponent
 {
-    private $emptyMessage;
+    protected $emptyMessage = 'No value match ';
     protected $autocompleteclass = ['osy-autocomplete'];
     protected $ico = '<span class="fa fa-search"></span>';
-    protected $db;
-    protected $query = [
-        'decode' => ['sql' => null, 'parameters' => []],
-        'search' => ['sql' => null, 'parameters' => []]
-    ];
+    protected $decodeEntityIdFunction;
+    protected $datasourceFunction;
+    protected $hiddenField;
 
-    public function __construct($id, $db = null)
-    {
+    public function __construct($id)
+    {        
+        parent::__construct('div', $id);
         $this->requireJs('Bcl4/Autocomplete/script.js');
         $this->requireCss('Bcl4/Autocomplete/style.css');
-        $this->db = $db;
-        parent::__construct('div', $id);
+        $this->addClass('osy-autocomplete');
+        $this->hiddenField = $this->add(new InputHidden('__'.$id));
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
         if (filter_input(\INPUT_SERVER, 'HTTP_OSYNAPSY_HTML_COMPONENTS') != $this->id) {
-            $this->addInput();
+            $this->add($this->inputMaskFactory());
             return;
         }
-        if (!empty($this->query['search']['sql'])) {
-            $this->setData($this->db->find($this->query['search']['sql'], $this->query['search']['parameters']));
-        }
-        $this->addValueList();
+        $userQuery = filter_input(\INPUT_POST, $this->id);
+        $dataset = $this->loadDataset($userQuery);
+        $this->add($this->valueListFactory($dataset, $userQuery));
     }
 
-    private function addInput()
+    protected function inputMaskFactory()
     {
-        if (!empty($this->query['decode']['sql'])) {
-            $_REQUEST[$this->id] = $this->db->findOne(
-                $this->query['decode']['sql'],
-                $this->query['decode']['parameters']
-            );
+        $Autocomplete = new InputGroup($this->id, '', $this->ico);
+        $Autocomplete->getTextBox()->onselect = 'event.stopPropagation();';
+        if (!empty($this->decodeEntityIdFunction)) {
+            $function = $this->decodeEntityIdFunction;
+            $Autocomplete->getTextBox()->setValue($function($this->hiddenField->getValue()));
         }
-        $this->add($this->buildAutocomplete())
-             ->add(new HiddenBox('__'.$this->id));
+        return $Autocomplete;
     }
 
-    private function addValueList()
+    protected function getDecodedValue()
     {
-        $valueList = $this->add(new Tag('div'));
-        $valueList->att('id',$this->id.'_list');
-        if (!empty($this->emptyMessage) && (empty($this->data) || !is_array($this->data))) {
-            $valueList->add('<div class="row empty-message">'.$this->emptyMessage.'</div>');
-            return;
+        list($decodeSql, $decodeSqlParams) = $this->query['decode'];
+        return !empty($decodeSql) ? $this->db->findOne($decodeSql, $decodeSqlParams ?? []) : null;
+    }
+
+    protected function loadDataset($query)
+    {
+        return ($this->datasourceFunction)($query);
+    }
+
+    protected function valueListFactory($dataset, $userQuery)
+    {
+        $valueList = new Tag('div', $this->id.'_list');
+        if (empty($dataset) || !is_array($dataset)) {
+            $valueList->add($this->emptyListMessageFactory($userQuery));
+            return $valueList;
         }
-        foreach ($this->data as $rec) {
+        foreach ($dataset as $rec) {
             $val = array_values($rec);
             if (empty($val) || empty($val[0])) {
                 continue;
@@ -79,17 +86,16 @@ class Autocomplete extends Component
                     $val[2] = $val[1];
                     break;
             }
-            $src    = filter_input(\INPUT_POST,$this->id);
-            $val[2] = str_replace($src,'<b>'.$src.'</b>',$val[2]);
-            $valueList->add('<div class="row" data-value="'.$val[0].'" data-label="'.$val[1].'">'.$val[2].'</div>'.PHP_EOL);
+
+            $val[2] = str_replace($userQuery, '<b>'.$userQuery.'</b>', $val[2]);
+            $valueList->add('<div class="item" data-value="'.$val[0].'" data-label="'.$val[1].'">'.$val[2].'</div>'.PHP_EOL);
         }
+        return $valueList;
     }
 
-    protected function buildAutocomplete()
+    protected function emptyListMessageFactory($userQuery)
     {
-        $autocomplete = new InputGroup($this->id, '', $this->ico);
-        $autocomplete->getTextBox()->onselect = 'event.stopPropagation();';
-        return $autocomplete->setClass(implode(' ', $this->autocompleteclass));
+        return sprintf('<div class="item empty-message">%s&nbsp;<b>%s</b>&nbsp;query</div>', $this->emptyMessage, $userQuery);
     }
 
     public function setLabel($label)
@@ -104,15 +110,15 @@ class Autocomplete extends Component
         return $this;
     }
 
-    public function setSelected($function)
+    public function onSelect($function)
     {
-        $this->onselected = $function;
+        $this->onselect = $function;
         return $this;
     }
 
-    public function setUnSelected($function)
+    public function onUnSelect($function)
     {
-        $this->onunselected = $function;
+        $this->onunselect = $function;
         return $this;
     }
 
@@ -121,22 +127,18 @@ class Autocomplete extends Component
         $this->ico = $ico;
     }
 
-    public function setQuerySearch($query, $parameters)
-    {
-        $this->query['search']['sql'] = $query;
-        $this->query['search']['parameters'] = $parameters;
-        return $this;
-    }
-
-    public function setQueryDecodeId($query, $parameters)
-    {
-        $this->query['decode']['sql'] = $query;
-        $this->query['decode']['parameters'] = $parameters;
-        return $this;
-    }
-
     public function addAutocompleteClass($class)
     {
         $this->autocompleteclass[] = $class;
+    }
+
+    public function setDecodeEntityId(callable $decodeFunction)
+    {
+        $this->decodeEntityIdFunction = $decodeFunction;
+    }
+
+    public function setDatasource(callable $datasourceFunction)
+    {
+        $this->datasourceFunction = $datasourceFunction;
     }
 }

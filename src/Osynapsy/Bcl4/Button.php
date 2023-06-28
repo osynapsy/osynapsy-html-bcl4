@@ -16,7 +16,7 @@ namespace Osynapsy\Bcl4;
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class Button extends \Osynapsy\Ocl\Button
+class Button extends \Osynapsy\Html\Component\Button
 {
     /**
      * Constructor of button component

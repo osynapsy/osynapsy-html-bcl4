@@ -31,7 +31,7 @@ class Container extends Tag
     {
         parent::__construct($tag, $id);
         if ($tag == 'form'){
-            $this->att('method', 'post');
+            $this->attribute('method', 'post');
         }
     }
 

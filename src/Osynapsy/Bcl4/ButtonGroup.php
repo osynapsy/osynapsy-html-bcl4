@@ -11,14 +11,14 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 /**
  * Impelementation of Bootstrap ButtonGroup
  *
  * @author Pietro Celeste
  */
-class ButtonGroup extends Component
+class ButtonGroup extends AbstractComponent
 {
     protected $ul;
     protected $b1;
@@ -27,7 +27,7 @@ class ButtonGroup extends Component
     public function __construct($name, $label, $class='')
     {
         parent::__construct('div', $name);
-        $this->att('class','btn-group');
+        $this->addClass('btn-group');
         $this->b1 = $this->add(new Button('btn1'.$name, $label, $class));
         $this->b2 = $this->add(new Button('btn2'.$name, '<span class="caret"></span>', "btn dropdown-toggle $class"))
         ->att('data-toggle','dropdown')
@@ -48,6 +48,6 @@ class ButtonGroup extends Component
 
     public function addSeparator()
     {
-        $this->ul->add(new Tag('li'))->att('class','divider')->att('role','separator');
+        $this->ul->add(new Tag('li', null, 'divider'))->attribute('role', 'separator');
     }
 }

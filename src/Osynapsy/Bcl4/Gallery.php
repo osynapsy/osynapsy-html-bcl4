@@ -12,9 +12,9 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
-class Gallery extends Component
+class Gallery extends AbstractComponent
 {
     protected $cellWidth = 4;
     protected $actions = [];

@@ -11,17 +11,18 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
 use Osynapsy\Html\Tag;
+use Osynapsy\Html\DOM;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\InputHidden;
 use Osynapsy\Database\PaginatorSimple;
-use Osynapsy\Ocl\HiddenBox;
 
 /**
  * Description of Pagination
  *
  * @author Pietro Celeste
  */
-class Pagination extends Component
+class Pagination extends AbstractComponent
 {
     private $columns = [];
     private $entity = 'Record';
@@ -59,28 +60,28 @@ class Pagination extends Component
      * @param type $infiniteContainer Enable infinite scroll?
      */
     public function __construct($id, $pageDimension = 10, $tag = 'div', $infiniteContainer = false)
-    {
+    {        
         parent::__construct($tag, $id);
+        $this->requireJs('Bcl4/Pagination/script.js');
+        $this->addClass('BclPagination');
         if (!empty($infiniteContainer)) {
             $this->setInfiniteScroll($infiniteContainer);
         }
-        $this->requireJs('Bcl4/Pagination/script.js');
-        $this->setClass('BclPagination');
         if ($tag == 'form') {
-            $this->att('method','post');
+            $this->attribute('method','post');
         }
         $this->setPageDimension($pageDimension);
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
         if (!$this->loaded) {
             $this->loadData();
         }
-        $this->add(new HiddenBox($this->id))->setClass('BclPaginationCurrentPage');
-        $this->add(new HiddenBox($this->id.'OrderBy'))->setClass('BclPaginationOrderBy');
+        $this->add(new InputHidden($this->id))->addClass('BclPaginationCurrentPage');
+        $this->add(new InputHidden($this->id.'OrderBy'))->addClass('BclPaginationOrderBy');
         foreach($this->fields as $field) {
-            $this->add(new HiddenBox($field, $field.'_hidden'));
+            $this->add(new InputHidden($field, $field.'_hidden'));
         }
         list($pageMin, $pageMax) = $this->calcPageMinMax();
         $this->add($this->ulFactory($pageMin, $pageMax));
@@ -111,8 +112,8 @@ class Pagination extends Component
     {
         $li = new Tag('li', null, trim('page-item '.$class));
         $li->add(new Tag('a', null, 'page-link'))
-           ->att('data-value', $value)
-           ->att('href','#')
+           ->attribute('data-value', $value)
+           ->attribute('href','#')
            ->add($label);
         return $li;
     }
@@ -149,8 +150,8 @@ class Pagination extends Component
     {
         $Combo = new ComboBox($this->pageDimensionFieldIdFactory());
         $Combo->setPlaceholder(false);
-        $Combo->att('onchange',"Osynapsy.refreshComponents(['{$this->parentComponent}'])")
-              ->setData($this->pageDimensions);
+        $Combo->attribute('onchange',"Osynapsy.refreshComponents(['{$this->parentComponent}'])");
+        $Combo->setDataset($this->pageDimensions);
         return $Combo;
     }
 
@@ -185,11 +186,11 @@ class Pagination extends Component
     {
         $this->requireJs('Lib/imagesLoaded-4.1.1/imagesloaded.js');
         $this->requireJs('Lib/wookmark-2.1.2/wookmark.js');
-        $this->att('class','infinitescroll',true)->att('style','display: none');
+        $this->attribute('class','infinitescroll',true)->attribute('style','display: none');
         if ($container[0] != '#' ||  $container[0] != '#') {
             $container = '#'.$container;
         }
-        return $this->att('data-container',$container);
+        return $this->attribute('data-container',$container);
     }
 
     public function setOrder($field)
@@ -223,7 +224,7 @@ class Pagination extends Component
     public function setParentComponent($componentId)
     {
         $this->parentComponent = $componentId;
-        $this->att('data-parent', $componentId);
+        $this->attribute('data-parent', $componentId);
         return $this;
     }
 

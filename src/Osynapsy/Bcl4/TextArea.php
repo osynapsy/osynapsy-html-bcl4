@@ -11,11 +11,11 @@
 
 namespace Osynapsy\Bcl4;
 
-class TextArea extends \Osynapsy\Ocl\TextArea
+class TextArea extends \Osynapsy\Html\Component\TextArea
 {
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->setClass('form-control');
+        $this->addClass('form-control');
     }
 }

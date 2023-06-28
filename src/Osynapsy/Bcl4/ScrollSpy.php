@@ -11,7 +11,7 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
 /**
@@ -19,7 +19,7 @@ use Osynapsy\Html\Tag;
  *
  * @author Pietro
  */
-class ScrollSpy extends Component
+class ScrollSpy extends AbstractComponent
 {
     private $pages = [];
     private $currentPage = null;
@@ -30,7 +30,7 @@ class ScrollSpy extends Component
     public function __construct($id, $height = '100vh', $tag = 'div')
     {
         parent::__construct($tag, $id);
-        $this->setClass('scrollspy position-relative bg-light d-block border p-lg-5 p-3');
+        $this->addClass('scrollspy position-relative bg-light d-block border p-lg-5 p-3');
         if (!empty($height)) {
             $this->style = 'overflow-y: scroll;height: '.$height;
         }
@@ -52,7 +52,7 @@ class ScrollSpy extends Component
         $pageId = $this->id . ($pid ?? count($this->pages));
         $this->currentPage = $this->add(new Grid($pageId));
         $this->currentPage->setCellClass('m-1');
-        $this->currentPage->setClass('bg-white border rounded mb-5 p-2');
+        $this->currentPage->addClass('bg-white border rounded mb-5 p-2');
         $this->currentPage->setFormatValue($this->paragraphFormatFunction);
         $this->pages[$pageId] = $this->currentPage;
         $this->listIndex->add(new Tag('a', $this->id.'IndexItem'.$pid, 'list-group-item list-group-item-action'))

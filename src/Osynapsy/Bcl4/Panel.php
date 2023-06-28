@@ -11,10 +11,10 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
-class Panel extends Component
+class Panel extends AbstractComponent
 {
     private $sections = array(
         'head' => null,
@@ -49,16 +49,16 @@ class Panel extends Component
         return $this;
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         $this->buildTitle();
         $this->buildCommands();
-        $this->att('class', $this->classCss['main']);
+        $this->addClass($this->classCss['main']);
         foreach ($this->sections as $key => $section){
             if (empty($section)) {
                 continue;
             }
-            $section->att('class', $this->classCss[$key]);
+            $section->attribute('class', $this->classCss[$key]);
             $this->add($section);
         }
     }
@@ -126,14 +126,14 @@ class Panel extends Component
     public function pushHorizontalField($label, $field, $info = '', $labelColumnWidth = 3)
     {
         $this->classCss['main'] = 'form-horizontal';
-        $row = $this->addRow()->att('class', 'form-group');
+        $row = $this->addRow()->attribute('class', 'form-group');
         $offset = $labelColumnWidth;
         if (!empty($label)) {
             $row->add(new Tag('label', null, sprintf('col-sm-%s control-label', $labelColumnWidth)))->add($label);
             $offset = 0;
         }
         if (!empty($label) && is_object($field)) {
-            $field->att('data-label', $label);
+            $field->attribute('data-label', $label);
         }
         $fieldContainer = $row->add(new Tag('div', null, sprintf('col-sm-%s col-sm-offset-%s', 12 - $labelColumnWidth, $offset)));
         $fieldContainer->add($field);

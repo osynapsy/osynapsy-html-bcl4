@@ -12,14 +12,14 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
 /**
  * Description of Dropdown
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class Dropdown extends Component
+class Dropdown extends AbstractComponent
 {
     const ALIGN_LEFT = 'left';
     const ALIGN_RIGHT = 'right';
@@ -30,7 +30,7 @@ class Dropdown extends Component
     public function __construct($name, $label, $align = self::ALIGN_LEFT, $tag = 'div')
     {
         parent::__construct($tag);
-        $this->setClass('dropdown');
+        $this->addClass('dropdown');
         $this->add($this->buildMainButton($name, $label));
         $this->align = $align;
     }
@@ -38,7 +38,7 @@ class Dropdown extends Component
     private function buildMainButton($name, $label)
     {
         $this->button = new Button($name.'_btn', $label, 'dropdown-toggle');
-        $this->button->att([
+        $this->button->attributes([
             'data-toggle' => 'dropdown',
             'aria-haspopup' => 'true',
             'aria-expanded' => 'false'
@@ -46,13 +46,13 @@ class Dropdown extends Component
         return $this->button;
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         $list = $this->add(new Tag('div', null, 'dropdown-menu dropdown-menu-'.$this->align));
-        $list->att('aria-labelledby', $this->getButton()->id);
-        foreach ($this->data as $rec) {
-            if (is_object($rec)) {
-                $list->add($rec)->att('class', 'dropdown-item', true);
+        $list->attribute('aria-labelledby', $this->getButton()->id);
+        foreach ($this->dataset as $rec) {
+            if (is_object($rec) && $rec instanceof Tag) {
+                $list->add($rec)->addClass('dropdown-item');
                 continue;
             }
             if ($rec === 'divider') {

@@ -11,10 +11,10 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\InputHidden;
 
-class Alert extends Component
+class Alert extends AbstractComponent
 {
     const ALERT_INFO = 'info';
     const ALERT_SUCCESS = 'success';
@@ -32,15 +32,15 @@ class Alert extends Component
     {
         parent::__construct('div', $id.'_container');
         $this->rawId = $id;
-        $this->hiddenBox = $this->add(new HiddenBox($id));
-        $this->att('class','alert')->att('role','alert');
+        $this->hiddenBox = $this->add(new InputHidden($id));
+        $this->addClass('alert')->attribute('role','alert');
         $this->setMessage($message);
         $this->setType($type);
     }
 
-    public function __build_extra__(): void
+    public function preBuild(): void
     {
-        $this->setClass("alert-{$this->type}");
+        $this->addClass("alert-{$this->type}");
         $this->add(sprintf("%s<span id=\"%s\">%s</span>", $this->icon, $this->rawId.'_label', $this->message));
         if (!$this->isDismissible) {
             return;

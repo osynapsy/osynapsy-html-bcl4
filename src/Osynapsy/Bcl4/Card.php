@@ -11,10 +11,10 @@
 namespace Osynapsy\Bcl4;
 
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
-class Card extends Component
+class Card extends AbstractComponent
 {
     private $sections = array(
         'header' => null,
@@ -52,7 +52,7 @@ class Card extends Component
         return $this;
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         if (!empty($this->title)) {
             $this->add($this->buildTitle());
@@ -60,7 +60,7 @@ class Card extends Component
         if (!empty($this->commands)) {
             $this->getHead()->add($this->buildCommands());
         }
-        $this->att('class', $this->classCss['main']);
+        $this->attribute('class', $this->classCss['main']);
         foreach ($this->sections as $key => $section){
             if (!empty($section)) {
                 $section->addClass($this->classCss[$key]);
@@ -113,7 +113,7 @@ class Card extends Component
         }
         $this->currentColumn = $this->currentRow->add(
             new Column($colspan, $offset)
-        )->setClass($this->classCss['cell']);
+        )->addClass($this->classCss['cell']);
         $this->currentRow->length += $colspan;
         return $this->currentColumn;
     }
@@ -218,7 +218,7 @@ class Card extends Component
     {
         $this->setClass('position-relative mr-3');
         $container = $this->add(new Tag('div', null, 'card-command ml-auto'));
-        $container->att('style', 'top: 5px; right: 5px;')->add($command);
+        $container->attribute('style', 'top: 5px; right: 5px;')->add($command);
     }
 
     public function simulateTable(bool $padding = true)
@@ -233,12 +233,12 @@ class Card extends Component
 
     public function setTopLeftIndex(int $top, int $left, int $width = 200)
     {
-        $this->att('style', sprintf('position: fixed; z-index: 1030; top: %spx; left: %spx; width: %spx;', $top, $left, $width));
+        $this->attribute('style', sprintf('position: fixed; z-index: 1030; top: %spx; left: %spx; width: %spx;', $top, $left, $width));
     }
 
     public function setTopRightIndex(int $top, int $right, int $width = 200)
     {
-        $this->att('style', sprintf('position: fixed; z-index: 1030; top: %spx; right: %spx; width: %spx;', $top, $right, $width));
+        $this->attribute('style', sprintf('position: fixed; z-index: 1030; top: %spx; right: %spx; width: %spx;', $top, $right, $width));
     }
 
     public function setCollapsable($collapsable = true)

@@ -11,15 +11,20 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
 use Osynapsy\Html\Tag;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\Link;
 
 /**
  * Build a Bootstrap NavBar
  *
  */
-class NavBar2 extends Component
+class NavBar2 extends AbstractComponent
 {
+    protected $brand;
+    protected $brandPrefix;
+    protected $containerClass;
+
     /**
      * Constructor require dom id of component
      *
@@ -27,12 +32,12 @@ class NavBar2 extends Component
      */
     public function __construct($id, $class = null)
     {
-        parent::__construct('nav', $id);
-        $this->setData([],[]);
         $this->requireCss('Bcl4/NavBar/style.css');
         $this->requireJs('Bcl4/NavBar/script.js');
+        parent::__construct('nav', $id);
+        $this->setDataset([],[]);
         if (!empty($class)) {
-            $this->setClass($class);
+            $this->addClass($class);
         }
     }
 
@@ -40,19 +45,19 @@ class NavBar2 extends Component
      * Main builder of navbar
      *
      */
-    public function __build_extra__()
+    public function preBuild()
     {
-        $this->setClass('osy-bcl4-navbar navbar navbar-expand-sm');
+        $this->addClass('osy-bcl4-navbar navbar navbar-expand-sm');
         $this->buildHeader();
         $collapsable = $this->add(new Tag('div', $this->id.'Content', 'collapse navbar-collapse'));
-        if (empty($this->data)) {
+        if (empty($this->dataset)) {
             return;
         }
-        if (!empty($this->data['primary'])) {
-            $collapsable->add($this->buildUlMenu($this->data['primary'])->addClass('mr-auto'));
+        if (!empty($this->dataset['primary'])) {
+            $collapsable->add($this->buildUlMenu($this->dataset['primary'])->addClass('mr-auto'));
         }
-        if (!empty($this->data['secondary'])) {
-            $ul = $this->buildUlMenu($this->data['secondary'], 0 ,'dropdown-menu dropdown-menu-lg-right');
+        if (!empty($this->dataset['secondary'])) {
+            $ul = $this->buildUlMenu($this->dataset['secondary'], 0 ,'dropdown-menu dropdown-menu-lg-right');
             $ul->addClass('justify-content-end');
             $collapsable->add($ul);
         }
@@ -66,24 +71,30 @@ class NavBar2 extends Component
      */
     private function buildHeader()
     {
-        $brand = $this->getParameter('brand');
-        $brandPrefix = $this->getParameter('brandPrefix');
+        $brand = $this->brand;
+        $brandPrefix = $this->brandPrefix;
         if (!empty($brandPrefix)) {
             $this->add($brandPrefix);
         }
         if (!empty($brand)) {
-            $this->add(new Tag('a', null, 'navbar-brand'))
-                 ->att('href', $brand[1])
-                 ->add($brand[0]);
+            $this->add(new Link(false, $brand[1], $brand[0], 'navbar-brand'));
         }
-        $this->add(new Tag('button', null, 'navbar-toggler'))->att([
+        $this->add($this->buttonNavBarTogglerFactory());
+    }
+
+    protected function buttonNavBarTogglerFactory()
+    {
+        $Button = new Tag('button', null, 'navbar-toggler');
+        $Button->attributes([
             'type' => "button",
             'data-toggle' => "collapse",
             'data-target' => "#".$this->id.'Content',
             'aria-controls' => $this->id.'Content',
             'aria-expanded' => "false",
             'aria-label' => "Toggle navigation"
-        ])->add('<span class="navbar-toggler-icon fa fa-bars"></span>');
+        ]);
+        $Button->add('<span class="navbar-toggler-icon fa fa-bars"></span>');
+        return $Button;
     }
 
     /**
@@ -103,7 +114,7 @@ class NavBar2 extends Component
         }
         foreach($data as $label => $menu){
             $li = $ul->add(new Tag('li', null, 'nav-item'));
-            $li->att('role', 'navigation');
+            $li->attribute('role', 'navigation');
             if ($menu === 'hr'){
                 $li->add($this->getNavDivider());
                 continue;
@@ -123,7 +134,7 @@ class NavBar2 extends Component
     private function getNavDropdownLink($label, $level)
     {
         $a = new Tag('a', null, 'dropdown-toggle '.(empty($level) ? 'nav-link' : 'dropdown-item'));
-        $a->att([
+        $a->attributes([
             'href' => '#',
             'data-toggle' => 'dropdown',
             'aria-expanded' => 'false',
@@ -135,7 +146,7 @@ class NavBar2 extends Component
     private function getNavLink($label, $url, $level)
     {
         $a = new Tag('a', null, empty($level) ? 'nav-link' : 'dropdown-item');
-        $a->att('href', $url)->add($label);
+        $a->attribute('href', $url)->add($label);
         return $a;
     }
 
@@ -152,7 +163,7 @@ class NavBar2 extends Component
      */
     public function setContainerFluid($bool = true)
     {
-        $this->setParameter('containerClass','container'.($bool ? '-fluid' : ''));
+        $this->containerClass = 'container'.($bool ? '-fluid' : '');
         return $this;
     }
 
@@ -165,8 +176,8 @@ class NavBar2 extends Component
      */
     public function setBrand($label, $href = '#', $prefix = null)
     {
-        $this->setParameter('brand', [$label, $href]);
-        $this->setParameter('brandPrefix', $prefix);
+        $this->brand = [$label, $href];
+        $this->brandPrefix = $prefix;
         return $this;
     }
 
@@ -179,8 +190,8 @@ class NavBar2 extends Component
      */
     public function setDataMenu(array $primary, array $secondary = [])
     {
-        $this->data['primary'] = $primary;
-        $this->data['secondary'] = $secondary;
+        $this->dataset['primary'] = $primary;
+        $this->dataset['secondary'] = $secondary;
         return $this;
     }
 
@@ -191,7 +202,7 @@ class NavBar2 extends Component
      */
     public function setFixedOnTop()
     {
-        $this->att('class','fixed-top',true);
+        $this->addClass('fixed-top');
         return $this;
     }
 }

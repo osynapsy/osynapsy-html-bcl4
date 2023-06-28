@@ -11,31 +11,31 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component as Component;
 use Osynapsy\Html\Tag;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\DOM;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\InputHidden;
 
 //Costruttore del pannello html
-class Accordion extends Component
+class Accordion extends AbstractComponent
 {
     private $panels = array();
     private $defaultOpen  = 0;
 
     public function __construct($id, $defaultOpen = 0)
     {
+        DOM::requireCss('Bcl4/Accordion/style.css');
+        DOM::requireCss('Bcl4/PanelAccordion/style.css');
         parent::__construct('div', $id);
-        $this->requireCss('Bcl4/Accordion/style.css');
-        $this->att('class','accordion osy-panel-accordion')
-             ->att('role','tablist');
-        $this->requireCss('Bcl4/PanelAccordion/style.css');
-        //$this->requireJs('Bcl4/PanelAccordion/script.js');
+        $this->addClass('class','accordion osy-panel-accordion');
+        $this->attribute('role','tablist');
         $memoryOpen = filter_input(\INPUT_POST, $this->id);
         $this->defaultOpen = is_null($memoryOpen) ? $defaultOpen : $memoryOpen;
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
-        $this->add(new HiddenBox($this->id));
+        $this->add(new InputHidden($this->id));
         foreach($this->panels as $panel) {
             $this->add($panel);
         }
@@ -56,7 +56,7 @@ class Accordion extends Component
             'card',
             ''
         );
-        $panel->addCommands($commands)->getBody()->att([
+        $panel->addCommands($commands)->getBody()->attributes([
             'id' => $panelId.'_body',
             'data-parent' => '#'.$this->id
         ]);
@@ -66,15 +66,16 @@ class Accordion extends Component
 
     private function buildHeader($title, $targetId, $open)
     {
-        $span = new Tag('span', null, 'c-pointer');
-        $span->att([
-            //'type' => 'button',
+        $h5 = new Tag('h5', null, 'mb-0');
+        $span = $h5->add(new Tag('button', null, 'btn collapsed'));
+        $span->attributes([
+            'type' => 'button',
             'data-toggle' => 'collapse',
             'role' => 'button',
             'data-target' => '#'.$targetId,
             'aria-expanded' => empty($open) ? 'false' : 'true',
             'aria-controls' => $targetId
         ])->add($title);
-        return $span;
+        return $h5;
     }
 }

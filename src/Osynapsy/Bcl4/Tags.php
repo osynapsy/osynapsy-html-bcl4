@@ -12,10 +12,10 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\InputHidden;
 
-class Tags extends Component
+class Tags extends AbstractComponent
 {
     private $labelClass;
     private $modal;
@@ -26,15 +26,15 @@ class Tags extends Component
     public function __construct($name, $class = "badge badge-info")
     {
         parent::__construct('div', $name);
-        $this->hidden = $this->add(new HiddenBox($name));
+        $this->hidden = $this->add(new InputHidden($name));
         $this->requireJs('Bcl4/Tags/script.js');
         $this->requireCss('Bcl4/Tags/style.css');
         $this->labelClass = $class;
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
-        $this->att('class','bclTags');
+        $this->addClass('bclTags');
         $wrapper = $this->add(new Tag('div', null, 'bclTags-container d-inline'));
         if (!empty($_REQUEST[$this->id])) {
             $wrapper->add($this->tagsFactory($_REQUEST[$this->id]));
@@ -44,7 +44,7 @@ class Tags extends Component
         }
         if (!empty($this->modal)) {
             $buttonAdd = $this->add(new Button('btn'.$this->id, '<span class="fa fa-plus"></span>', 'btn-info btn-xs'));
-            $buttonAdd->att('data-toggle','modal')->att('data-target','#modal'.$this->id);
+            $buttonAdd->attribute('data-toggle','modal')->attribute('data-target','#modal'.$this->id);
         }
         if (!empty($this->dropdown)) {
             $this->add($this->dropdown);
@@ -63,7 +63,7 @@ class Tags extends Component
 
     protected function tagFactory($tag)
     {
-        $result = (new Tag('span', null, $this->labelClass))->att('data-parent',sprintf('#%s', $this->id));
+        $result = (new Tag('span', null, $this->labelClass))->attribute('data-parent',sprintf('#%s', $this->id));
         $result->add(str_replace(['[',']'], '', $tag));
         $result->add('&nbsp');
         $result->add(new Tag('span', null, 'fa fa-close bclTags-delete'));
@@ -73,7 +73,7 @@ class Tags extends Component
     protected function buttonModalCloseFactory()
     {
         $Button = new Button('clsModal'.$this->id, 'Annulla', 'btn-default pull-left float-left');
-        $Button->att('data-dismiss','modal');
+        $Button->attribute('data-dismiss','modal');
         return $Button;
     }
 
@@ -83,8 +83,8 @@ class Tags extends Component
         $this->modal->addBody($body);
         $this->modal->addFooter($this->buttonModalCloseFactory());
         if (is_object($buttonAdd)) {
-            $buttonAdd->att('class', 'bclTags-add', true)
-                      ->att('data-parent', '#'.$this->id);
+            $buttonAdd->attribute('class', 'bclTags-add', true)
+                      ->attribute('data-parent', '#'.$this->id);
         }
         $this->modal->addFooter($buttonAdd);
     }
@@ -99,13 +99,13 @@ class Tags extends Component
     {
         $ajax = filter_input(\INPUT_POST, 'ajax');
         if (empty($ajax)) {
-            $this->autocomplete = new Autocomplete($this->id.'_auto','div');
+            $this->autocomplete = new Autocomplete($this->id.'_auto');
             $this->autocomplete->addAutocompleteClass('input-group-sm');
-            $this->autocomplete->att([
+            $this->autocomplete->attributes([
                 'style' =>'width: 150px; margin-top: 3px;',
                 'class' => 'd-inline-block'
             ]);
-            $this->autocomplete->setSelected("\$('#{$this->id} span.fa-plus').click()");
+            $this->autocomplete->onSelect("\$('#{$this->id} span.fa-plus').click()");
             $this->autocomplete->setIco('<span class="fa fa-plus tag-append" onclick="BclTags.addTag(\'#'.$this->id.'\');"></span>');
             return $this->autocomplete;
         }

@@ -11,7 +11,7 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
 /**
@@ -19,7 +19,7 @@ use Osynapsy\Html\Tag;
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class Form extends Component
+class Form extends AbstractComponent
 {
     use FormCommands;
 
@@ -39,11 +39,11 @@ class Form extends Component
     public function __construct($name, $mainComponent = 'PanelTk', $tag = 'form')
     {
         parent::__construct($tag, $name);
-        $this->att(['name' => $name, 'method' => 'post', 'role' => 'form']);
+        $this->attributes(['name' => $name, 'method' => 'post', 'role' => 'form']);
         $this->body = $this->buildMainComponent($mainComponent);
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         if ($this->head) {
             $this->add($this->head);
@@ -61,7 +61,7 @@ class Form extends Component
     {
         $rawComponent = '\\Osynapsy\\Bcl4\\'.$mainComponent;
         $component = new $rawComponent($this->id.'_panel', 'div');
-        $component->setParameter('label-position','inside');
+        $component->setLabelPosition('inside');
         return $component;
     }
 
@@ -74,7 +74,7 @@ class Form extends Component
     {
         if (empty($this->headCommand)) {
             $this->headCommand = $this->head($this->headCommandWidth);
-            $this->headCommand->att('style','padding-top: 10px');
+            $this->headCommand->attribute('style','padding-top: 10px');
         }
         if ($space > 0) {
             $this->headCommand->add(str_repeat('&nbsp;', $space));
@@ -94,7 +94,7 @@ class Form extends Component
     {
         if (empty($this->alert)) {
             $this->alert = new Tag('div');
-            $this->alert->att('class','transition animated fadeIn m-b-sm');
+            $this->alert->attribute('class','transition animated fadeIn m-b-sm');
         }
         $alert = new Alert('alert_'.$this->alertCount, $label, $type);
         $alert->setDismissible(true);
@@ -113,7 +113,7 @@ class Form extends Component
             return;
         }
         $this->foot->addClass($class);
-        $this->foot->att('style', 'background-color: rgba(255,255,255,0.8); border-top: 1px solid #ddd;');
+        $this->foot->attribute('style', 'background-color: rgba(255,255,255,0.8); border-top: 1px solid #ddd;');
     }
 
     public function foot($obj, $right = false)
@@ -162,7 +162,7 @@ class Form extends Component
     public function setType($type)
     {
         if ($type == 'horizontal') {
-            $this->att('class','form-horizontal',true);
+            $this->attribute('class','form-horizontal',true);
         }
         $this->body->setType($type);
     }

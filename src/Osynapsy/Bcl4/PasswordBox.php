@@ -11,11 +11,11 @@
 
 namespace Osynapsy\Bcl4;
 
-class PasswordBox extends \Osynapsy\Ocl\PasswordBox
+class PasswordBox extends \Osynapsy\Html\Component\InputPassword
 {
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->setClass('form-control');
+        $this->addClass('form-control');
     }
 }

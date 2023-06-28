@@ -38,19 +38,19 @@ class Addressbook extends Panel
         $this->requireJs('Bcl4/Addressbook/script.js');
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         if (!empty($this->paginator)) {
             try {
-                $this->setData($this->paginator->loadData(null, true));
+                $this->setDataset($this->paginator->loadData(null, true));
                 $this->buildPagination($this->paginator);
             } catch (\Exception $e) {
                 $this->emptyMessage = $e->getMessage();
             }
         }
-        if (empty($this->data)) {
+        if (empty($this->dataset)) {
             $this->addColumn(12)->add($this->emptyMessageFactory($this->emptyMessage));
-            parent::__build_extra__();
+            parent::preBuild();
             return;
         }
         $this->itemSelected = empty($_REQUEST[$this->id.'_chk']) ? [] : $_REQUEST[$this->id.'_chk'];
@@ -58,7 +58,7 @@ class Addressbook extends Panel
         if ($this->foot) {
             $this->addColumn(12)->add($this->foot);
         }
-        parent::__build_extra__();
+        parent::preBuild();
     }
 
     protected function emptyMessageFactory($emptyMessage)
@@ -69,7 +69,7 @@ class Addressbook extends Panel
     protected function bodyFactory()
     {
         $columnLength = floor(12 / $this->columns);
-        foreach($this->data as $i => $rec) {
+        foreach($this->dataset as $i => $rec) {
             $column = $this->addColumn($columnLength)->setXs(6);
             $a = $column->add(new Tag('div', null, 'osy-addressbook-item'));
             $p0 = $a->add(new Tag('div', null, 'p0'));
@@ -94,7 +94,7 @@ class Addressbook extends Panel
             case 'checkbox':
                 $checked = '';
                 if (!empty($this->itemSelected[$v])) {
-                    $a->att('class','osy-addressbook-item-selected',true);
+                    $a->attribute('class','osy-addressbook-item-selected',true);
                     $checked=' checked="checked"';
                 }
                 $a->add('<span class="fa fa-check"></span>');
@@ -102,14 +102,14 @@ class Addressbook extends Panel
                 break;
             case 'href':
                 $a->add(new Tag('a', null, 'osy-addressbook-link save-history fa fa-pencil'))
-                  ->att('href',$v);
+                  ->attribute('href',$v);
                 break;
             case 'hrefModal':
                 $a->add(new Tag('a', null, 'osy-addressbook-link fa fa-pencil fa-pencil-alt open-modal'))
-                  ->att(['href' => $v, 'modal-width' => '640px', 'modal-height' => '480px']);
+                  ->attribute(['href' => $v, 'modal-width' => '640px', 'modal-height' => '480px']);
                 break;
             case 'class':
-                $a->att('class',$v,true);
+                $a->attribute('class',$v,true);
                 break;
             case 'img':
                 if (!empty($v)) {

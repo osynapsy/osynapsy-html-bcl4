@@ -11,14 +11,14 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
 /**
  * Description of ListGroup
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class ListGroup extends Component
+class ListGroup extends AbstractComponent
 {
     protected $repo = [];
     protected $id;
@@ -30,7 +30,7 @@ class ListGroup extends Component
         $this->setClass('list-group');
     }
 
-    public function __build_extra__(): void
+    public function preBuild(): void
     {
         foreach ($this->repo as $item) {
             $this->add($item);
@@ -46,6 +46,6 @@ class ListGroup extends Component
     public function setFixedPosition($width = '100%', $top = '0px', $left = '0px')
     {
         $this->addClass('position-fixed d-none d-lg-block');
-        $this->att('style', sprintf('width : %s; top : %s; left : %s;', $width, $top, $left));
+        $this->attribute('style', sprintf('width : %s; top : %s; left : %s;', $width, $top, $left));
     }
 }

@@ -26,13 +26,13 @@ trait FormCommands
     public function buttonCloseModalFactory()
     {
         $button = new Button('btn_close', '<span class="fa fa-times"></span> Chiudi', 'cmd-close btn btn-default btn-secondary');
-        return $button->att('onclick', "parent.$('#amodal').modal('hide');");
+        return $button->attribute('onclick', "parent.$('#amodal').modal('hide');");
     }
 
     public function buttonDeleteFactory($label = true, $alert = 'Sei sicuro di voler procedere con l\'eliminazione ?')
     {
         $btnDelete = new Button('btn_delete', $label === true ? '<span class="fa fa-trash-o"></span> Elimina' : $label, 'btn-danger');
-        $btnDelete->setAction('delete', null, 'click-execute', $alert);
+        $btnDelete->setAction('delete', [], $alert);
         return $btnDelete;
     }
 

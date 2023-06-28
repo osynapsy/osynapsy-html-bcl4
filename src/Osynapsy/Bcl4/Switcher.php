@@ -12,15 +12,15 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
-use Osynapsy\Ocl\CheckBox;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\CheckBox;
 
 /**
  * Description of Switcher
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class Switcher extends Component
+class Switcher extends AbstractComponent
 {
     private $checkBox;
     private $label;
@@ -28,10 +28,10 @@ class Switcher extends Component
     public function __construct($id, $label)
     {
         parent::__construct('div', $id.'_container');
-        $this->setClass('custom-control custom-switch');
-        $this->checkBox = $this->add(new CheckBox($id, 'dummy'))->getCheckBox();
-        $this->checkBox->att('class', 'custom-control-input');
-        $this->label = $this->add(new Tag('label', null, "custom-control-label"))->att('for', $id);
+        $this->addClass('custom-control custom-switch');
+        $this->checkBox = $this->add(new CheckBox($id))->getCheckBox();
+        $this->checkBox->addClass('custom-control-input');
+        $this->label = $this->add(new Tag('label', null, "custom-control-label"))->attribute('for', $id);
         $this->label->add($label);
     }
 
@@ -42,16 +42,16 @@ class Switcher extends Component
 
     public function setAction($action, $parameters = null, $class = 'click-execute', $confirmMessage = null)
     {
-        $this->checkBox->att(['data-action' => $action, 'data-action-parameters' => $parameters]);
+        $this->checkBox->attributes(['data-action' => $action, 'data-action-parameters' => $parameters]);
         $this->checkBox->addClass($class);
         if (!empty($confirmMessage)) {
-            $this->checkBox->att('data-action-confirm', $confirmMessage);
+            $this->checkBox->attribute('data-action-confirm', $confirmMessage);
         }
         return $this;
     }
 
     public function disable()
     {
-        $this->checkBox->att('disabled');
+        $this->checkBox->attribute('disabled', 'disabled');
     }
 }

@@ -12,11 +12,13 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
+use Osynapsy\Html\DOM;
+use Osynapsy\Html\Component\AbstractComponent;
 
-class FileBox extends Component
+class FileBox extends AbstractComponent
 {
     protected $fileBox;
+    protected $deleteCommand;
     public $showImage = false;
     public $span;
 
@@ -30,8 +32,7 @@ class FileBox extends Component
                 </span>
             </span>
         */
-        $this->requireJs('Bcl4/FileBox/script.js');
-
+        DOM::requireJs('Bcl4/FileBox/script.js');
         parent::__construct('dummy', $name);
         $this->span = $this->add(new Tag('span'));
         $div = $this->add(new Tag('div', null, 'input-group'));
@@ -68,7 +69,20 @@ class FileBox extends Component
         $download->att('target','_blank')->att('href',$_REQUEST[$this->id])->add($filename.' <span class="fa fa-download"></span>');
         $label = $this->span->add(new LabelBox('donwload_'.$this->id));
         $label->att('style','padding: 10px; background-color: #ddd; margin-bottom: 10px;');
-        $label->setLabel($download);
+        $label->setLabel($download, $this->deleteCommand);
         $this->span->add($label);
+    }
+
+    public function setDeleteAction($action, $parameters = [], $confirmMessage = null)
+    {
+        $button = new Tag('span', null, 'fa fa-close click-execute float-right');
+        $button->att('data-action', $action);
+        if (!empty($parameters)) {
+            $button->att('data-action-parameters', implode(',', $parameters));
+        }
+        if (!empty($confirmMessage)) {
+            $button->att('data-confirm', $confirmMessage);
+        }
+        $this->deleteCommand = $button;
     }
 }

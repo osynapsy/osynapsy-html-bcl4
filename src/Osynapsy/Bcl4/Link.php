@@ -11,13 +11,14 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Ocl\Link as OclLink;
+use Osynapsy\Html\Component\Link as BaseLink;
 
-class Link extends OclLink
+class Link extends BaseLink
 {
     public function openInModal($title, $widht = '640px', $height = '480px', $postData = false)
     {
-        $this->setClass('open-modal')->att([
+        $this->addClass('open-modal');
+        $this->attributes([
             'title' => $title,
             'modal-width' => $widht,
             'modal-height' => $height
@@ -30,7 +31,10 @@ class Link extends OclLink
     public function setDisabled($condition)
     {
         if ($condition) {
-            $this->att(['href' => 'javascipt:void(0);', 'onclick' => 'event.stopPropagation();']);
+            $this->attributes([
+                'href' => 'javascipt:void(0);',
+                'onclick' => 'event.stopPropagation();'
+            ]);
         }
         return $this;
     }

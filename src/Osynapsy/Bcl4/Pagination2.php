@@ -12,9 +12,9 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Database\Paginator;
-use Osynapsy\Ocl\HiddenBox;
+use Osynapsy\Html\Component\InputHidden;
 use Osynapsy\Bcl4\Link;
 use Osynapsy\Bcl4\ComboBox;
 use Osynapsy\Bcl4\IPagination;
@@ -24,7 +24,7 @@ use Osynapsy\Bcl4\IPagination;
  *
  * @author Pietro Celeste
  */
-class Pagination2 extends Component implements IPagination
+class Pagination2 extends AbstractComponent implements IPagination
 {
     private $entity = 'record';
     protected $data = [];
@@ -52,17 +52,17 @@ class Pagination2 extends Component implements IPagination
      * @param type $infiniteContainer Enable infinite scroll?
      */
     public function __construct($id, Paginator $paginator, $tag = 'div')
-    {
+    {        
         parent::__construct($tag, $id);
-        $this->setClass('BclPagination');
         $this->requireJs('Bcl4/Pagination/script.js');
+        $this->addClass('BclPagination');
         $this->setPaginator($paginator);
         if ($tag == 'form') {
-            $this->att('method','post');
+            $this->attribute('method','post');
         }
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
         $this->extraFieldsFactory();
         $this->add($this->fieldCurrentPageFactory());
@@ -88,15 +88,15 @@ class Pagination2 extends Component implements IPagination
 
     protected function fieldCurrentPageFactory()
     {
-        $hidden = new HiddenBox($this->id);
-        $hidden->setClass('BclPaginationCurrentPage');
+        $hidden = new InputHidden($this->id);
+        $hidden->addClass('BclPaginationCurrentPage');
         return $hidden;
     }
 
     protected function fieldOrderByFactory()
     {
-        $hidden = new HiddenBox($this->id.'OrderBy');
-        $hidden->setClass('BclPaginationOrderBy');
+        $hidden = new InputHidden($this->id.'OrderBy');
+        $hidden->addClass('BclPaginationOrderBy');
         return $hidden;
     }
 
@@ -108,7 +108,7 @@ class Pagination2 extends Component implements IPagination
     protected function linkPageItemFactory($index, $label)
     {
         $link = new Link(sprintf('%sPage%s', $this->id, $index), '#', $label, 'page-link');
-        $link->att('data-value', $index);
+        $link->attribute('data-value', $index);
         return $link;
     }
 
@@ -131,8 +131,8 @@ class Pagination2 extends Component implements IPagination
     {
         $Combo = new ComboBox($this->id.(strpos($this->id, '_') ? '_page_dimension' : 'PageDimension'));
         $Combo->setPlaceholder(false);
-        $Combo->att('onchange',"Osynapsy.refreshComponents(['{$this->parentComponent}'])")
-              ->setData($this->pageDimensions);
+        $Combo->attribute('onchange',"Osynapsy.refreshComponents(['{$this->parentComponent}'])");
+        $Combo->setDataset($this->pageDimensions);
         return $Combo;
     }
 
@@ -191,7 +191,7 @@ class Pagination2 extends Component implements IPagination
     public function setParentComponent($componentId)
     {
         $this->parentComponent = $componentId;
-        $this->att('data-parent', $componentId);
+        $this->attribute('data-parent', $componentId);
         return $this;
     }
 

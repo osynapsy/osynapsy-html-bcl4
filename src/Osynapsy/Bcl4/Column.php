@@ -11,10 +11,10 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 
-class Column extends Component
+class Column extends AbstractComponent
 {
     private $size = array(
         'lg' => array('width' => null, 'offset' => 0),
@@ -35,11 +35,11 @@ class Column extends Component
         $this->setXs(0, 0);
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         foreach ($this->size as $size => $dimension) {
             if (empty($dimension['width'])) {
-                $this->setClass('col');
+                $this->addClass('col');
                 continue;
             }
             $class = $size === 'xs' ? 'col-'.$dimension['width'] : 'col-'.$size.'-'.$dimension['width'];
@@ -47,7 +47,7 @@ class Column extends Component
                 $class .= ' col-'.$size.'-offset-'.$dimension['offset'];
                 $class .= ' offset-'.$size.'-'.$dimension['offset'];
             }
-            $this->setClass($class);
+            $this->addClass($class);
         }
     }
 
@@ -82,7 +82,7 @@ class Column extends Component
     public function push($label, $object, $sublabel = '', $class = 'form-group')
     {
         if ($object instanceof Tag) {
-            $object->att('data-label', strip_tags(is_array($label) ? $label[0] : $label));
+            $object->attribute('data-label', strip_tags(is_array($label) ? $label[0] : $label));
         }
         $this->add(new FormGroup($object, $label, $class))->setInfo($sublabel);
         return $this;

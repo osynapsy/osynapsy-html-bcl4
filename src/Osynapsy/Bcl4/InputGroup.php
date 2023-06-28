@@ -12,7 +12,7 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
 /**
  * Description of InputGroup
@@ -20,7 +20,7 @@ use Osynapsy\Html\Component;
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
 
-class InputGroup extends Component
+class InputGroup extends AbstractComponent
 {
     protected $textBox;
     protected $postfix;
@@ -29,19 +29,19 @@ class InputGroup extends Component
     public function __construct($name, $prefix = null, $postfix = null, $dimension = null)
     {
         parent::__construct('div');
-        $this->setClass('input-group');
+        $this->addClass('input-group');
         $this->prepend($prefix);
         if (is_object($name)) {
             $this->textBox = $name;
         } else {
             $this->textBox = new TextBox($name);
-            $this->textBox->att('aria-describedby', $name.'_prefix');
+            $this->textBox->attribute('aria-describedby', $name.'_prefix');
         }
         $this->append($postfix);
         $this->setDimension($dimension);
     }
 
-    public function __build_extra__(): void
+    public function preBuild(): void
     {
         if (!empty($this->prefix)) {
             $this->add($this->prefix);

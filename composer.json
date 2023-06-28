@@ -1,6 +1,6 @@
 {
     "name": "osynapsy/osynapsy-html-bcl4",
-    "version": "0.9.3",
+    "version": "1.0",
     "homepage": "http://www.osynapsy.net/html-bcl4",
     "type": "library",
     "description": "Osynapsy bootstrap components library",
@@ -16,7 +16,7 @@
     "require": {
         "php" : ">=7.2.0",        
         "osynapsy/osynapsy-database" : "@stable",
-        "osynapsy/osynapsy-html-ocl" : "@stable"        
+        "osynapsy/osynapsy-html2" : "@stable"        
     },
     "autoload" : {
         "psr-4": {

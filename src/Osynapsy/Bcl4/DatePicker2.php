@@ -11,24 +11,28 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
-class DatePicker2 extends Component
+class DatePicker2 extends AbstractComponent
 {
     const FORMAT_DATE_IT = 'DD/MM/YYYY';
     const FORMAT_DATETIME_IT = 'DD/MM/YYYY HH:mm';
 
     private $datePickerId;
     private $dateComponent;
+    protected $defaultValue;
     protected $format = 'DD/MM/YYYY';
 
     public function __construct($id)
     {
-        $this->datePickerId = $id;
-        $this->pushRequirement($this);
+        $this->datePickerId = $id;        
         parent::__construct('div', $id.'_datepicker');
-        $this->att(['class' => 'input-group date date-picker' , 'data-target-input'=> 'nearest']);
-        $this->fieldDateBoxFactory();
+        $this->requireCss('Lib/tempusdominus-5.38.0/style.css');
+        $this->requireJs('Lib/momentjs-2.17.1/moment.js');
+        $this->requireJs('Lib/tempusdominus-5.38.0/script.js');
+        $this->requireJs('Bcl4/DatePicker/script.js');
+        $this->attributes(['class' => 'input-group date date-picker' , 'data-target-input'=> 'nearest']);
+        $this->dateComponent = $this->add($this->fieldDateBoxFactory());
         $this->fieldInputGruopAppendFactory();
     }
 
@@ -39,33 +43,37 @@ class DatePicker2 extends Component
 
     protected function fieldDateBoxFactory()
     {
-        $this->dateComponent = $this->add(new TextBox($this->datePickerId));
-
-        $this->dateComponent->att([
+        $TextBox = new TextBox($this->datePickerId);
+        $TextBox->attributes([
             'class' => 'form-control datetimepicker-input text-center',
             'data-toggle' => 'datetimepicker',
             'data-target' => sprintf('#%s',$this->id)
         ]);
-    }
-
-    public static function pushRequirement($object)
-    {
-        self::requireFile($object, 'Lib/tempusdominus-5.38.0/style.css', 'css');
-        self::requireFile($object, 'Lib/momentjs-2.17.1/moment.js', 'js');
-        self::requireFile($object, 'Lib/tempusdominus-5.38.0/script.js', 'js');
-        self::requireFile($object, 'Bcl4/DatePicker/script.js', 'js');
-    }
-
-    protected function __build_extra__()
-    {
-        $this->att('data-date-format', $this->format);
-        if (!empty($_REQUEST[$this->datePickerId])) {
-            $dateArray = explode(' ', $_REQUEST[$this->datePickerId]);
-            $data = explode('-', $dateArray[0]);
-            if (count($data) >= 3 && strlen($data[0]) == 4) {
-                $_REQUEST[$this->datePickerId] = $data[2].'/'.$data[1].'/'.$data[0].(empty($dateArray[1]) ? '' : " {$dateArray[1]}");
+        $TextBox->formatValueFunction = function($value)
+        {
+            if (empty($value)) {
+                return $value;
             }
+            $dateTimeParts = explode(' ', $value);
+            $dateParts = explode('-', $dateTimeParts[0]);
+            if (count($dateParts) >= 3 && strlen($dateParts[0]) == 4) {
+                return $dateParts[2].'/'.$dateParts[1].'/'.$dateParts[0].(empty($dateTimeParts[1]) ? '' : " {$dateTimeParts[1]}");
+            }
+        };
+        return $TextBox;
+    }
+
+    public function preBuild()
+    {
+        $this->attribute('data-date-format', $this->format);
+        if (!empty($this->defaultValue) && empty($this->getTextBox()->getValue())) {
+            $this->getTextBox()->setValue($this->defaultValue);
         }
+    }
+
+    public function getTextBox()
+    {
+        return $this->dateComponent;
     }
 
     /**
@@ -103,10 +111,7 @@ class DatePicker2 extends Component
 
     public function setDefaultDate($date = null)
     {
-        if (!empty($_REQUEST[$this->datePickerId])) {
-            return;
-        }
-        $_REQUEST[$this->datePickerId] = empty($date) ? date('d/m/Y') : $date;
+        $this->defaultValue = empty($date) ? date('d/m/Y') : $date;
     }
 
     public function onChange($code)
@@ -116,7 +121,7 @@ class DatePicker2 extends Component
 
     public function setAction($action, $parameters = null, $confirmMessage = null, $class = 'change-execute')
     {
-        parent::setAction($action, $parameters, $class, $confirmMessage);
+        parent::setAction($action, $parameters, $confirmMessage, $class);
     }
 
     public function setDisabled($condition)
@@ -127,5 +132,5 @@ class DatePicker2 extends Component
     public function setReadOnly($condition)
     {
         $this->dateComponent->setReadOnly($condition);
-    }
+    }   
 }

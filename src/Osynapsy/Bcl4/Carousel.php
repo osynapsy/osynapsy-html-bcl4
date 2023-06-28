@@ -12,14 +12,14 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component;
+use Osynapsy\Html\Component\AbstractComponent;
 
 /**
  * Description of Carousel
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class Carousel extends Component
+class Carousel extends AbstractComponent
 {
     private $showCommands;
     private $showIndicators;
@@ -31,7 +31,7 @@ class Carousel extends Component
         $this->showIndicators = $showIndicators;
     }
 
-    protected function __build_extra__()
+    public function preBuild()
     {
         if (!empty($this->data)) {
             return;

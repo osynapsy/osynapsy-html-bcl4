@@ -11,43 +11,23 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
-use Osynapsy\Html\Tag;
+use Osynapsy\Html\Component\CheckBox as CheckBoxBase;
 
 /**
  * Description of CheckBox
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class CheckBox extends Component
+class CheckBox extends CheckBoxBase
 {
     protected $checkbox;
 
     public function __construct($id, $label, $value = '1', $prefix = '')
     {
-        parent::__construct('label', $id.'_parent');
-        $this->att('class','form-check-label')->add('<input type="hidden" name="'.$id.'" value="0">');
+        parent::__construct($id, $label, $value, 'label');
+        $this->addClass('form-check-label');
         if (!empty($prefix)) {
             $this->add($prefix);
-        }
-        $this->checkbox = $this->add(new Tag('input'))->att([
-            'id' => $id,
-            'type' => 'checkbox',
-            'name' => $id,
-            'value' => $value
-        ]);
-        $this->add(' '.$label);
-    }
-
-    public function getCheckBox()
-    {
-        return $this->checkbox;
-    }
-
-    protected function __build_extra__()
-    {
-        if (!empty($_REQUEST[$this->checkbox->id])) {
-            $this->checkbox->att('checked','checked');
-        }
-    }
+        }        
+    }   
 }
