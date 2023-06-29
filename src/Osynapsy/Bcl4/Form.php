@@ -36,7 +36,7 @@ class Form extends AbstractComponent
     protected $footRight;
     protected $headCommand;
 
-    public function __construct($name, $mainComponent = 'PanelTk', $tag = 'form')
+    public function __construct($name, $mainComponent = PanelTk::class, $tag = 'form')
     {
         parent::__construct($tag, $name);
         $this->attributes(['name' => $name, 'method' => 'post', 'role' => 'form']);
@@ -58,17 +58,11 @@ class Form extends AbstractComponent
     }
 
     protected function buildMainComponent($mainComponent)
-    {
-        $rawComponent = '\\Osynapsy\\Bcl4\\'.$mainComponent;
-        $component = new $rawComponent($this->id.'_panel', 'div');
+    {        
+        $component = new $mainComponent($this->id.'_panel', 'div');
         $component->setLabelPosition('inside');
         return $component;
-    }
-
-    public function addCard($title)
-    {
-        $this->body->addCard($title);
-    }
+    }   
 
     public function addHeadCommand($object, $space = 1)
     {
@@ -132,13 +126,7 @@ class Form extends AbstractComponent
     public function getPanel()
     {
         return $this->body;
-    }
-
-    public function put($lbl, $obj, $x = 0, $y = 0, $width = 1, $offset = null, $class = '')
-    {
-        $this->body->put($lbl, $obj, $x, $y, $width, $offset, $class);
-        return $this->body;
-    }
+    }   
 
     public function setCommand($delete = false, $save = true, $back = true, $closeModal = false, $fixbar = false)
     {
@@ -192,5 +180,10 @@ class Form extends AbstractComponent
         if (method_exists($this->body, 'setClasses')) {
             $this->body->setClasses('card', 'card-header', 'card-body', 'card-footer');
         }
+    }
+
+    public function __call($method, $arguments)
+    {
+        return call_user_func_array([$this->getPanel(), $method], $arguments);
     }
 }
