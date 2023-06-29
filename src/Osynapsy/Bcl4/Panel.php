@@ -31,6 +31,7 @@ class Panel extends AbstractComponent
     ];
 
     private $currentRow = null;
+    private $currentRowLength = 0;
     private $currentColumn = null;
     private $title;
     private $commands = [];
@@ -51,58 +52,48 @@ class Panel extends AbstractComponent
 
     public function preBuild()
     {
-        $this->buildTitle();
-        $this->buildCommands();
+        if (!empty($this->title)) {
+            $this->getHead()->add($this->titleFactory($this->title, $this->classCss['title']));
+        }
+        if (!empty($this->commands)) {
+            $this->getHead()->add($this->commandsFactory($this->commands));
+        }
         $this->addClass($this->classCss['main']);
         foreach ($this->sections as $key => $section){
-            if (empty($section)) {
-                continue;
-            }
-            $section->attribute('class', $this->classCss[$key]);
-            $this->add($section);
+            if (!empty($section)) {
+                $this->add($section->attribute('class', $this->classCss[$key]));
+            }            
         }
     }
 
-    protected function buildCommands()
+    protected function titleFactory($title, $class)
     {
-        if (empty($this->commands)) {
-            return;
-        }
-        $container = $this->getHead()->add(
-            new Tag('div', null, 'panel-commands pull-right')
-        );
-        foreach($this->commands as $command) {
+        return sprintf('<div class="%s pull-left">%s</div>', $class, $title);
+    }
+
+    protected function commandsFactory($commands)
+    {        
+        $container = new Tag('div', null, 'panel-commands pull-right');
+        foreach($commands as $command) {
             $container->add($command);
         }
+        return $container;
     }
-
-    protected function buildTitle()
-    {
-        if (empty($this->title)) {
-            return;
-        }
-        $this->getHead()->add(
-            '<div class="'.$this->classCss['title'].' pull-left">'.$this->title.'</div>'
-        );
-    }
-
+    
     public function addRow($class = 'row')
     {
-        $this->currentRow = $this->sections['body']->add(
-            new Tag('div', null, $class)
-        );
+        $this->currentRow = $this->sections['body']->add(new Tag('div', null, $class));
+        $this->currentRowLength = 0;
         return $this->currentRow;
     }
 
     public function addColumn($colspan = 12, $offset = 0)
     {
-        if (empty($this->currentRow)) {
+        if (empty($this->currentRow) || ($colspan + $offset) >= 12) {
             $this->addRow();
         }
-        $this->currentColumn = $this->currentRow->add(
-            new Column($colspan, $offset)
-        );
-        return $this->currentColumn;
+        $this->currentRow->length += ($colspan + $offset);
+        return $this->currentColumn = $this->currentRow->add(new Column($colspan, $offset));
     }
 
     public function getBody()
