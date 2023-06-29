@@ -15,7 +15,6 @@ class TextArea extends \Osynapsy\Html\Component\TextArea
 {
     public function __construct($name)
     {
-        parent::__construct($name);
-        $this->addClass('form-control');
+        parent::__construct($name, 'form-control');
     }
 }

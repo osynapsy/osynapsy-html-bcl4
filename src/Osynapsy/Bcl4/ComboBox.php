@@ -12,22 +12,20 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Component\ComboBox as BaseComboBox;
-use Osynapsy\Html\DOM;
 
 class ComboBox extends BaseComboBox
 {
-    public function __construct($name)
+    public function __construct($id, $class = '')
     {
-        parent::__construct($name);
-        $this->addClass('form-control');
+        parent::__construct($id, trim('form-control '.$class));
     }
 
     public function enableSearch()
     {
         $this->addClass('selectpicker');
         $this->attribute('data-live-search', 'true');
-        DOM::requireCss('Bcl4/ComboBox/bootstrap-select.css');
-        DOM::requireJs('Bcl4/ComboBox/bootstrap-select.js');
+        $this->requireCss('Bcl4/ComboBox/bootstrap-select.css');
+        $this->requireJs('Bcl4/ComboBox/bootstrap-select.js');
     }
 
     public function setSmallSize()

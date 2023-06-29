@@ -17,13 +17,12 @@ class TextBox extends InputText
 {
     public function __construct($name, $class = '')
     {
-        parent::__construct($name);
-        $this->addClass(trim('form-control '.$class));
+        parent::__construct($name, trim('form-control '.$class));
     }
 
     public function setSmallSize()
     {
-        $this->setClass('form-control-sm');
+        $this->addClass('form-control-sm');
         return $this;
     }
 }

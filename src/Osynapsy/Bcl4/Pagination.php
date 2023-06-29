@@ -60,7 +60,7 @@ class Pagination extends AbstractComponent
      * @param type $infiniteContainer Enable infinite scroll?
      */
     public function __construct($id, $pageDimension = 10, $tag = 'div', $infiniteContainer = false)
-    {        
+    {
         parent::__construct($tag, $id);
         $this->requireJs('Bcl4/Pagination/script.js');
         $this->addClass('BclPagination');
@@ -71,6 +71,8 @@ class Pagination extends AbstractComponent
             $this->attribute('method','post');
         }
         $this->setPageDimension($pageDimension);
+        $this->add(new InputHidden($this->id))->addClass('BclPaginationCurrentPage');
+        $this->add(new InputHidden($this->id.'OrderBy'))->addClass('BclPaginationOrderBy');
     }
 
     public function preBuild()
@@ -78,8 +80,7 @@ class Pagination extends AbstractComponent
         if (!$this->loaded) {
             $this->loadData();
         }
-        $this->add(new InputHidden($this->id))->addClass('BclPaginationCurrentPage');
-        $this->add(new InputHidden($this->id.'OrderBy'))->addClass('BclPaginationOrderBy');
+
         foreach($this->fields as $field) {
             $this->add(new InputHidden($field, $field.'_hidden'));
         }

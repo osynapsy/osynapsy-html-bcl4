@@ -52,7 +52,7 @@ class Pagination2 extends AbstractComponent implements IPagination
      * @param type $infiniteContainer Enable infinite scroll?
      */
     public function __construct($id, Paginator $paginator, $tag = 'div')
-    {        
+    {
         parent::__construct($tag, $id);
         $this->requireJs('Bcl4/Pagination/script.js');
         $this->addClass('BclPagination');

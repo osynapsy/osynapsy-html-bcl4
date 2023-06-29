@@ -11,41 +11,56 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component;
 use Osynapsy\Html\Tag;
+use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\Link;
 
 /**
  * Build a Bootstrap NavBar
  *
  */
-class NavBar extends Component
+class NavBar extends AbstractComponent
 {
+    protected $brand;
+    protected $brandPrefix;
+    protected $containerClass;
+
     /**
      * Constructor require dom id of component
      *
      * @param string $id
      */
-    public function __construct($id)
-    {
-        parent::__construct('nav', $id.'_navbar');
-        $this->setParameter('containerClass', 'container');
-        $this->setData([],[]);
+    public function __construct($id, $class = null)
+    {        
+        parent::__construct('nav', $id);
+        $this->requireCss('Bcl4/NavBar/style.css');
+        $this->requireJs('Bcl4/NavBar/script.js');
+        $this->setDataset([],[]);
+        if (!empty($class)) {
+            $this->addClass($class);
+        }
     }
 
     /**
      * Main builder of navbar
      *
      */
-    public function __build_extra__()
+    public function preBuild()
     {
-        $this->setClass('navbar navbar-default');
-        $container = $this->add(new Tag('div'));
-        $container->att('class', $this->getParameter('containerClass'));
-
-        $this->buildHeader($container);
-        $collapse = $container->add(new Tag('div',$this->id.'_collapse'))->att('class','collapse navbar-collapse');
-        $this->buildUlMenu($collapse, $this->data['primary'])->att('class','nav navbar-nav');
-        $this->buildUlMenu($collapse, $this->data['secondary'])->att('class','nav navbar-nav pull-right');
+        $this->addClass('osy-bcl4-navbar navbar navbar-expand-sm');
+        $this->buildHeader();
+        $collapsable = $this->add(new Tag('div', $this->id.'Content', 'collapse navbar-collapse'));
+        if (empty($this->dataset)) {
+            return;
+        }
+        if (!empty($this->dataset['primary'])) {
+            $collapsable->add($this->buildUlMenu($this->dataset['primary'])->addClass('mr-auto'));
+        }
+        if (!empty($this->dataset['secondary'])) {
+            $ul = $this->buildUlMenu($this->dataset['secondary'], 0 ,'dropdown-menu dropdown-menu-lg-right');
+            $ul->addClass('justify-content-end');
+            $collapsable->add($ul);
+        }
     }
 
     /**
@@ -54,61 +69,90 @@ class NavBar extends Component
      * @param type $container
      * @return type
      */
-    private function buildHeader($container)
+    private function buildHeader()
     {
-        $header = $container->add(new Tag('div'))
-                  ->att('class','navbar-header');
-        $header->add(
-            '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#'.$this->id.'_collapse" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>'
-        );
-        $brand = $this->getParameter('brand');
-        if (empty($brand)) {
-            return;
+        $brand = $this->brand;
+        $brandPrefix = $this->brandPrefix;
+        if (!empty($brandPrefix)) {
+            $this->add($brandPrefix);
         }
-        $header->add(new Tag('a'))
-               ->att('href', $brand[1])
-               ->att('class','navbar-brand')
-               ->add($brand[0]);
+        if (!empty($brand)) {
+            $this->add(new Link(false, $brand[1], $brand[0], 'navbar-brand'));
+        }
+        $this->add($this->buttonNavBarTogglerFactory());
+    }
+
+    protected function buttonNavBarTogglerFactory()
+    {
+        $Button = new Tag('button', null, 'navbar-toggler');
+        $Button->attributes([
+            'type' => "button",
+            'data-toggle' => "collapse",
+            'data-target' => "#".$this->id.'Content',
+            'aria-controls' => $this->id.'Content',
+            'aria-expanded' => "false",
+            'aria-label' => "Toggle navigation"
+        ]);
+        $Button->add('<span class="navbar-toggler-icon fa fa-bars"></span>');
+        return $Button;
     }
 
     /**
      * Internal method for build a unordered list menù (recursive)
      *
-     * @param object $container of ul
      * @param array $data
      * @param int $level
+     * @param string $dropdownMenuClass class to apply drowdownMenu
      * @return type
      */
-    private function buildUlMenu($container, array $data, $level = 0)
+    private function buildUlMenu(array $data, $level = 0, $dropdownMenuClass = 'dropdown-menu')
     {
-        $ul = $container->add(new Tag('ul'))
-                        ->att('class', ($level > 0 ? 'dropdown-menu' : ''));
+        //Add ul menù container;
+        $ul = new Tag('ul', null, empty($level) ? 'navbar-nav' : $dropdownMenuClass);
         if (empty($data) || !is_array($data)) {
             return $ul;
         }
         foreach($data as $label => $menu){
-            $li = $ul->add(new Tag('li'));
-            if (is_array($menu)) {
-                $li->att('class','dropdown')
-                ->add(new Tag('a'))
-                ->att(['class' => 'dropdown-toggle', 'href' => '#', 'data-toggle' => 'dropdown'])
-                ->add($label.' <span class="caret"></span>');
-                $this->buildUlMenu($li, $menu, $level + 1);
-                continue;
-            }
+            $li = $ul->add(new Tag('li', null, 'nav-item'));
+            $li->attribute('role', 'navigation');
             if ($menu === 'hr'){
-                $li->att(['role' => 'separator', 'class' => 'divider']);
+                $li->add($this->getNavDivider());
                 continue;
             }
-            $li->add(new Tag('a'))->att('href',$menu)->add($label);
-
+            if (!is_array($menu)) {
+                $li->add($this->getNavLink($label, $menu, $level));
+                continue;
+            }
+            $li->add($this->getNavDropdownLink($label, $level));
+            $li->addClass(empty($level) ? 'dropdown' : 'dropdown-submenu')->add(
+                $this->buildUlMenu($menu, $level + 1, $dropdownMenuClass)
+            );
         }
         return $ul;
+    }
+
+    private function getNavDropdownLink($label, $level)
+    {
+        $a = new Tag('a', null, 'dropdown-toggle '.(empty($level) ? 'nav-link' : 'dropdown-item'));
+        $a->attributes([
+            'href' => '#',
+            'data-toggle' => 'dropdown',
+            'aria-expanded' => 'false',
+            'aria-haspopup' => 'true'
+        ])->add($label);
+        return $a;
+    }
+
+    private function getNavLink($label, $url, $level)
+    {
+        $a = new Tag('a', null, empty($level) ? 'nav-link' : 'dropdown-item');
+        $a->attribute('href', $url)->add($label);
+        return $a;
+    }
+
+    private function getNavDivider()
+    {
+        return new Tag('div', null, 'dropdown-divider');
     }
 
     /**
@@ -119,7 +163,7 @@ class NavBar extends Component
      */
     public function setContainerFluid($bool = true)
     {
-        $this->setParameter('containerClass','container'.($bool ? '-fluid' : ''));
+        $this->containerClass = 'container'.($bool ? '-fluid' : '');
         return $this;
     }
 
@@ -130,9 +174,10 @@ class NavBar extends Component
      * @param string $href is url where user will be send if click brand
      * @return $this
      */
-    public function setBrand($label, $href = '#')
+    public function setBrand($label, $href = '#', $prefix = null)
     {
-        $this->setParameter('brand', [$label, $href]);
+        $this->brand = [$label, $href];
+        $this->brandPrefix = $prefix;
         return $this;
     }
 
@@ -145,8 +190,8 @@ class NavBar extends Component
      */
     public function setDataMenu(array $primary, array $secondary = [])
     {
-        $this->data['primary'] = $primary;
-        $this->data['secondary'] = $secondary;
+        $this->dataset['primary'] = $primary;
+        $this->dataset['secondary'] = $secondary;
         return $this;
     }
 
@@ -157,7 +202,7 @@ class NavBar extends Component
      */
     public function setFixedOnTop()
     {
-        $this->att('class','navbar-fixed-top',true);
+        $this->addClass('fixed-top');
         return $this;
     }
 }
