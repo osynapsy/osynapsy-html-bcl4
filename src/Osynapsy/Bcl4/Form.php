@@ -36,11 +36,11 @@ class Form extends AbstractComponent
     protected $footRight;
     protected $headCommand;
 
-    public function __construct($name, $mainComponent = PanelTk::class, $tag = 'form')
+    public function __construct($name, $mainComponentClass = PanelTk::class, $tag = 'form')
     {
         parent::__construct($tag, $name);
         $this->attributes(['name' => $name, 'method' => 'post', 'role' => 'form']);
-        $this->body = $this->buildMainComponent($mainComponent);
+        $this->body = $this->mainComponentFactory($mainComponentClass);
     }
 
     public function preBuild()
@@ -57,11 +57,9 @@ class Form extends AbstractComponent
         }
     }
 
-    protected function buildMainComponent($mainComponent)
+    protected function mainComponentFactory($mainComponentClass)
     {        
-        $component = new $mainComponent($this->id.'_panel', 'div');
-        $component->setLabelPosition('inside');
-        return $component;
+        return new $mainComponentClass($this->id.'_panel', 'div');
     }   
 
     public function addHeadCommand($object, $space = 1)
