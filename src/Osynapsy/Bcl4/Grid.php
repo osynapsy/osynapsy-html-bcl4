@@ -44,9 +44,9 @@ class Grid extends AbstractComponent
          );
     }
 
-    protected function __build_extra__(): void
+    public function preBuild(): void
     {
-        if (empty($this->data)) {
+        if (empty($this->dataset)) {
             return;
         }
         if (empty($this->addCommand)) {

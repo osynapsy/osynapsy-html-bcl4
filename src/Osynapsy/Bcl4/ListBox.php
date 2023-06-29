@@ -23,10 +23,10 @@ class ListBox extends AbstractComponent
     private $box;
 
     public function __construct($id)
-    {
-        $this->requireJs('Bcl4/ListBox/script.js');
-        $this->requireCss('Bcl4/ListBox/style.css');
+    {        
         parent::__construct('div', $id.'_container');
+        $this->requireJs('bcl4/listbox/script.js');
+        $this->requireCss('bcl4/listbox/style.css');
         $this->addClass('listbox');
         $this->hdn = $this->add(new InputHidden($id));
         $this->box = $this->add(new Tag('div', null, 'listbox-box'));
@@ -36,15 +36,16 @@ class ListBox extends AbstractComponent
     {
         $list = $this->add(new Tag('ul', null, 'listbox-list'));
         foreach ($this->dataset as $rec) {
-            $selected = '';
-            if (array_key_exists($this->hdn->id, $_REQUEST) && ($rec[0] == $_REQUEST[$this->hdn->id])) {
-                $this->box->set($rec[1]);
-                $selected = ' selected';
-            }
-            $list->add(new Tag('li'))
-                 ->add(new Tag('div', null,'listbox-list-item'.$selected))
-                 ->attribute('value',$rec[0])
-                 ->add($rec[1]);
+            $selected = ($this->hdn->getAttribute('value') == $rec[0]);
+            $list->add($this->listItemFactory($rec[0], $rec[1], $selected));
         }
-    }   
+    }
+
+    protected function listItemFactory($value, $label, $selected)
+    {
+        $listItem = new Tag('li');
+        $item = $listItem->add(new Tag('div', null, 'listbox-list-item' . $selected ? ' selected' : ''));
+        $item->attribute('value', $value)->add($label);
+        return $listItem;
+    }
 }

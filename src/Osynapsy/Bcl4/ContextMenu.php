@@ -13,34 +13,36 @@ namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
 use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\Link;
 
 class ContextMenu extends AbstractComponent
-{
-    private $actions = array();
-    private $ul;
+{    
+    private $dropdown;
 
-    public function __construct($id, $link, $label, $class='')
-    {
-        $this->requireCss('Bcl4/ContextMenu/style.css');
-        $this->requireJs('Bcl4/ContextMenu/script.js');
+    public function __construct($id, $class='')
+    {        
         parent::__construct('div', $id);
-        $this->att('class', 'BclContextMenu dropdown clearfix');
-        $this->ul = $this->add(new Tag('ul'))
-                         ->att('class','dropdown-menu')
-                         ->att('role','menu')
-                         ->att('aria-labelledby','dropdownMenu')
-                         ->att('style','display: block; position: static; margin-bottom: 5px;');
-
+        $this->requireCss('bcl4/contextmenu/style.css');
+        $this->requireJs('bcl4/contextmenu/script.js');
+        $this->addClass('BclContextMenu dropdown clearfix ' . $class);
+        $this->dropdown = $this->add($this->dropdownFactory());
     }
 
-    public function addAction($label, $action, $params='')
+    protected function dropdownFactory()
     {
-        $this->ul
-             ->add(new Tag('li'))
-             ->add(new Tag('a'))
-             ->att('href','javascript:void(0);')
-             ->att('data-action',$action)
-             ->att('data-action-param',$params)
-             ->add($label);
+        $Dropdown = new Tag('ul', null,'dropdown-menu');
+        $Dropdown->attributes([
+            'role' => 'menu',
+            'aria-labelledby' => 'dropdownMenu',
+            'style' => 'display: block; position: static; margin-bottom: 5px;'
+        ]);
+        return $Dropdown;
+    }
+
+    public function addAction($label, $action, array $parameters = [])
+    {
+        $Link = $this->dropdown->add(new Tag('li'))->add(new Link(false, false, $label));
+        $Link->attributes(['data-action' => $action,'data-action-param' => implode(',', $parameters)]);
+        return $Link;
     }
 }

@@ -22,8 +22,8 @@ class PanelAccordion extends AbstractComponent
     public function __construct($id)
     {        
         parent::__construct('div', $id);
-        $this->requireCss('Bcl4/PanelAccordion/style.css');
-        $this->requireJs('Bcl4/PanelAccordion/script.js');
+        $this->requireCss('bcl4/panelaccordion/style.css');
+        $this->requireJs('bcl4/panelaccordion/script.js');
         $this->addClass('panel-group osy-panel-accordion');
         $this->attribute('role', 'tablist');
     }

@@ -26,15 +26,15 @@ class ListTree extends ListBox
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->requireJs('Bcl4/ListBox/script.js');
-        $this->requireCss('Bcl4/ListBox/style.css');
+        $this->requireJs('bcl4/listbox/script.js');
+        $this->requireCss('bcl4/listbox/style.css');
     }
 
     public function preBuild()
     {
         $this->request = empty($_REQUEST[$this->id]) ? null : $_REQUEST[$this->id];
         array_unshift($this->data,array('','- seleziona -'));
-        $this->add($this->buildBranch($this->data));
+        $this->add($this->buildBranch($this->dataset));
     }
 
     private function buildBranch($branch, $class='listbox-list')
@@ -58,7 +58,7 @@ class ListTree extends ListBox
         return $ul;
     }
 
-    public function SetData($rawData)
+    public function setDataset(array $rawData)
     {
         $this->data = array();
         foreach ($rawData as $k => $rec) {

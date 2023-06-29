@@ -12,7 +12,6 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\DOM;
 use Osynapsy\Html\Component\AbstractComponent;
 
 class FileBox extends AbstractComponent
@@ -23,17 +22,9 @@ class FileBox extends AbstractComponent
     public $span;
 
     public function __construct($name, $postfix = false, $prefix = true)
-    {
-         /*
-            http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
-            <span class="input-group-btn">
-                <span class="btn btn-primary btn-file">
-                    Browse&hellip; <input type="file" multiple>
-                </span>
-            </span>
-        */
-        DOM::requireJs('Bcl4/FileBox/script.js');
+    {        
         parent::__construct('dummy', $name);
+        $this->requireJs('bcl4/filebox/script.js');
         $this->span = $this->add(new Tag('span'));
         $div = $this->add(new Tag('div', null, 'input-group'));
         $div->add(new Tag('span', null, 'input-group-btn input-group-prepend'))

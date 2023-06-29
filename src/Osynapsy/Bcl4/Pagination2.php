@@ -54,7 +54,7 @@ class Pagination2 extends AbstractComponent implements IPagination
     public function __construct($id, Paginator $paginator, $tag = 'div')
     {
         parent::__construct($tag, $id);
-        $this->requireJs('Bcl4/Pagination/script.js');
+        $this->requireJs('bcl4/pagination/script.js');
         $this->addClass('BclPagination');
         $this->setPaginator($paginator);
         if ($tag == 'form') {

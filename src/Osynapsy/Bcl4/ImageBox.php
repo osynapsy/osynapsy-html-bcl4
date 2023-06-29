@@ -13,7 +13,6 @@ namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\DOM;
 use Osynapsy\Html\Component\InputHidden;
 
 class ImageBox extends AbstractComponent
@@ -41,10 +40,10 @@ class ImageBox extends AbstractComponent
     {
         $this->rawId = $id;
         parent::__construct('div', $id.'_box');
-        $this->requireCss('Lib/rcrop/style.css');
-        $this->requireJs('Lib/rcrop/script.js');
-        $this->requireCss('Bcl4/ImageBox/style.css');
-        $this->requireJs('Bcl4/ImageBox/script.js');
+        $this->requireCss('lib/rcrop/style.css');
+        $this->requireJs('lib/rcrop/script.js');
+        $this->requireCss('bcl4/imagebox/style.css');
+        $this->requireJs('bcl4/imagebox/script.js');
         $this->addClass('osy-imagebox-bcl text-center');
         $this->attribute('data-action', 'upload');
         $this->attribute('data-preserve-aspect-ratio', 0);

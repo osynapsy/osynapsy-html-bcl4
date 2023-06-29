@@ -24,9 +24,9 @@ class CheckList extends BaseCheckList
      *
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct($id)
     {
-        parent::__construct($name);
-        DOM::requireCss('Bcl4/CheckList/style.css');
+        parent::__construct($id);
+        $this->requireCss('bcl4/checkList/style.css');
     }
 }

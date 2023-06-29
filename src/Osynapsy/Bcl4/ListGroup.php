@@ -27,7 +27,7 @@ class ListGroup extends AbstractComponent
     {
         $this->id = $id;
         parent::__construct('div', $id);
-        $this->setClass('list-group');
+        $this->addClass('list-group');
     }
 
     public function preBuild(): void

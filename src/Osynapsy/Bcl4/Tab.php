@@ -32,7 +32,7 @@ class Tab extends AbstractComponent
     public function __construct($id)
     {        
         parent::__construct('dummy');
-        $this->requireJs('Bcl4/Tab/script.js');
+        $this->requireJs('bcl4/tab/script.js');
         $this->id = $id;        
         $this->add(new InputHidden($id));
         $this->navTab = $this->add($this->navTabFactory($id));

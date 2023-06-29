@@ -27,8 +27,8 @@ class Tags extends AbstractComponent
     {
         parent::__construct('div', $name);
         $this->hidden = $this->add(new InputHidden($name));
-        $this->requireJs('Bcl4/Tags/script.js');
-        $this->requireCss('Bcl4/Tags/style.css');
+        $this->requireJs('bcl4/tags/script.js');
+        $this->requireCss('bcl4/tags/style.css');
         $this->labelClass = $class;
     }
 

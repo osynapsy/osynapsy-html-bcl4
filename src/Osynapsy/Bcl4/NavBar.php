@@ -33,8 +33,8 @@ class NavBar extends AbstractComponent
     public function __construct($id, $class = null)
     {        
         parent::__construct('nav', $id);
-        $this->requireCss('Bcl4/NavBar/style.css');
-        $this->requireJs('Bcl4/NavBar/script.js');
+        $this->requireCss('bcl4/navBar/style.css');
+        $this->requireJs('bcl4/navBar/script.js');
         $this->setDataset([],[]);
         if (!empty($class)) {
             $this->addClass($class);

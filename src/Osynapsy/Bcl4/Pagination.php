@@ -62,7 +62,7 @@ class Pagination extends AbstractComponent
     public function __construct($id, $pageDimension = 10, $tag = 'div', $infiniteContainer = false)
     {
         parent::__construct($tag, $id);
-        $this->requireJs('Bcl4/Pagination/script.js');
+        $this->requireJs('bcl4/pagination/script.js');
         $this->addClass('BclPagination');
         if (!empty($infiniteContainer)) {
             $this->setInfiniteScroll($infiniteContainer);

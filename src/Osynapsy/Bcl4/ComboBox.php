@@ -18,15 +18,7 @@ class ComboBox extends BaseComboBox
     public function __construct($id, $class = '')
     {
         parent::__construct($id, trim('form-control '.$class));
-    }
-
-    public function enableSearch()
-    {
-        $this->addClass('selectpicker');
-        $this->attribute('data-live-search', 'true');
-        $this->requireCss('Bcl4/ComboBox/bootstrap-select.css');
-        $this->requireJs('Bcl4/ComboBox/bootstrap-select.js');
-    }
+    }   
 
     public function setSmallSize()
     {

@@ -24,8 +24,8 @@ class Accordion extends AbstractComponent
 
     public function __construct($id, $defaultOpen = 0)
     {
-        DOM::requireCss('Bcl4/Accordion/style.css');
-        DOM::requireCss('Bcl4/PanelAccordion/style.css');
+        DOM::requireCss('bcl4/accordion/style.css');
+        DOM::requireCss('bcl4/panelAccordion/style.css');
         parent::__construct('div', $id);
         $this->addClass('class','accordion osy-panel-accordion');
         $this->attribute('role','tablist');

@@ -22,7 +22,7 @@ class LabelBox extends AbstractComponent
     public function __construct($id, $label='')
     {        
         parent::__construct('div', $id.'_labelbox');
-        $this->requireCss('Bcl4/LabelBox/style.css');
+        $this->requireCss('bcl4/labelbox/style.css');
         $this->addClass('osynapsy-labelbox');
         $this->hiddenBox = $this->add(new InputHidden($id));
         $this->add($label);

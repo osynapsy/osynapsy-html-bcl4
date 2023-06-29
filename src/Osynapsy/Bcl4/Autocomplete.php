@@ -27,8 +27,8 @@ class Autocomplete extends AbstractComponent
     public function __construct($id)
     {        
         parent::__construct('div', $id);
-        $this->requireJs('Bcl4/Autocomplete/script.js');
-        $this->requireCss('Bcl4/Autocomplete/style.css');
+        $this->requireJs('bcl4/autocomplete/script.js');
+        $this->requireCss('bcl4/autocomplete/style.css');
         $this->addClass('osy-autocomplete');
         $this->hiddenField = $this->add(new InputHidden('__'.$id));
     }

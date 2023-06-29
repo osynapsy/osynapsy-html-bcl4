@@ -34,8 +34,8 @@ class Addressbook extends Panel
         $this->setClass('','','','osy-addressbook');
         $this->columns = $columns;
         $this->emptyMessage = $emptyMessage;
-        $this->requireCss('Bcl4/Addressbook/style.css');
-        $this->requireJs('Bcl4/Addressbook/script.js');
+        $this->requireCss('bcl4/addressbook/style.css');
+        $this->requireJs('bcl4/addressbook/script.js');
     }
 
     public function preBuild()

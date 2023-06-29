@@ -16,7 +16,18 @@
     "require": {
         "php" : ">=7.2.0",        
         "osynapsy/osynapsy-database" : "@stable",
-        "osynapsy/osynapsy-html2" : "@stable"        
+        "osynapsy/osynapsy-html2" : "@stable",
+        "twbs/bootstrap" : "4.*"        
+    },
+    "scripts": {
+        "post-package-update": [
+            "rm -rf public/assets/vendor/bootstrap",
+            "rm -rf public/assets/vendor/osynapsy/bcl4",
+            "mkdir -p public/assets/vendor/bootstrap",
+            "mkdir -p public/assets/vendor/osynapsy/",
+            "cp -R vendor/twbs/bootstrap/dist public/assets/vendor/bootstrap",                        
+            "cp -R assets/bcl4 public/assets/vendor/osynapsy/"
+        ]
     },
     "autoload" : {
         "psr-4": {
