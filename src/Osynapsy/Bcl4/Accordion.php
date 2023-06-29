@@ -12,7 +12,6 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\DOM;
 use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Component\InputHidden;
 
@@ -23,10 +22,10 @@ class Accordion extends AbstractComponent
     private $defaultOpen  = 0;
 
     public function __construct($id, $defaultOpen = 0)
-    {
-        DOM::requireCss('bcl4/accordion/style.css');
-        DOM::requireCss('bcl4/panelAccordion/style.css');
+    {        
         parent::__construct('div', $id);
+        $this->requireCss('bcl4/accordion/style.css');
+        $this->requireCss('bcl4/panelaccordion/style.css');
         $this->addClass('class','accordion osy-panel-accordion');
         $this->attribute('role','tablist');
         $memoryOpen = filter_input(\INPUT_POST, $this->id);
@@ -67,7 +66,7 @@ class Accordion extends AbstractComponent
     private function buildHeader($title, $targetId, $open)
     {
         $h5 = new Tag('h5', null, 'mb-0');
-        $span = $h5->add(new Tag('button', null, 'btn collapsed'));
+        $span = $h5->add(new Tag('button', null, 'btn btn-block text-left  collapsed'));
         $span->attributes([
             'type' => 'button',
             'data-toggle' => 'collapse',
