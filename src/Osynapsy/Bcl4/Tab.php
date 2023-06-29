@@ -42,7 +42,7 @@ class Tab extends AbstractComponent
 
     protected function initTabSelected($id)
     {
-        $this->tabSelected = empty($_REQUEST[id]) ? "#{$id}_0" : $_REQUEST[$id];
+        $this->tabSelected = empty($_REQUEST['id']) ? "#{$id}_0" : $_REQUEST[$id];
     }
 
     protected function navTabFactory($id)
