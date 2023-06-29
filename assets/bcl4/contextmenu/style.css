@@ -1,0 +1,13 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 29 giu 2023, 14:58:53
+    Author     : peter
+*/
+
+.BclContextMenu {
+  position: absolute;
+  display:none;
+}
