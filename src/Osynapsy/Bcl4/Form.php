@@ -59,7 +59,7 @@ class Form extends AbstractComponent
 
     protected function mainComponentFactory($mainComponentClass)
     {        
-        return new $mainComponentClass($this->id.'_panel', 'div');
+        return new $mainComponentClass($this->id.'_panel');
     }   
 
     public function addHeadCommand($object, $space = 1)
