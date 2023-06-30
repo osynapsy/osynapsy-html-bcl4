@@ -56,7 +56,7 @@ class ScrollSpy extends AbstractComponent
         $this->currentPage->setFormatValue($this->paragraphFormatFunction);
         $this->pages[$pageId] = $this->currentPage;
         $this->listIndex->add(new Tag('a', $this->id.'IndexItem'.$pid, 'list-group-item list-group-item-action'))
-                        ->att('href', '#'.$pageId)
+                        ->atttribute('href', '#'.$pageId)
                         ->add(strip_tags($title) ?? 'Unamed');
         if (empty($title)) {
             return;
@@ -107,22 +107,22 @@ class ScrollSpy extends AbstractComponent
     protected function setTopPosition(int $top, int $left, int $right, int $width = 0, $panelClass = '')
     {
         $this->panelListIndex->addClass(sprintf('fixed-top %s', $panelClass));
-        $this->panelListIndex->att('style', sprintf('top: %spx; ', $top));
+        $this->panelListIndex->addStyle('top',  sprintf('%spx; ', $top));
         if ($left > -1) {
-            $this->panelListIndex->att('style', sprintf(' left: %spx;', $left), true);
+            $this->panelListIndex->addStyle('left', sprintf('%spx;', $left));
         }
         if ($right > -1) {
-            $this->panelListIndex->att('style', sprintf(' right: %spx;', $right), true);
+            $this->panelListIndex->addStyle('right', sprintf('%spx;', $right));
         }
         if (!empty($width)) {
-            $this->panelListIndex->att('style', sprintf(' width: %spx;', $width), true);
+            $this->panelListIndex->addStyle('width', sprintf('%spx;', $width));
         }
     }
 
     public function setSpySourceId($jquerySourceId, $offset = 50)
     {
         $jqueryDestinationId = sprintf('#%sIndex', $this->id);
-        $this->setJavascript(
+        $this->requireScript(
             sprintf(
                 "$(document).ready(function() { $('%s').scrollspy({target: '%s', offset: %s}); });",
                 $jquerySourceId,

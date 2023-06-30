@@ -32,7 +32,7 @@ class Grid extends AbstractComponent
     public function __construct($id, $tag = 'div', $class = 'grid')
     {
         parent::__construct($tag, $id);
-        $this->setClass($class);
+        $this->addClass($class);
         $this->setFormatValue(function($rec){
             return is_array($rec) ? implode('<br>',$rec) : $rec;
         });
