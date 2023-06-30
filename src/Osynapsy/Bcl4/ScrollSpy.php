@@ -56,7 +56,7 @@ class ScrollSpy extends AbstractComponent
         $this->currentPage->setFormatValue($this->paragraphFormatFunction);
         $this->pages[$pageId] = $this->currentPage;
         $this->listIndex->add(new Tag('a', $this->id.'IndexItem'.$pid, 'list-group-item list-group-item-action'))
-                        ->atttribute('href', '#'.$pageId)
+                        ->attribute('href', '#'.$pageId)
                         ->add(strip_tags($title) ?? 'Unamed');
         if (empty($title)) {
             return;
