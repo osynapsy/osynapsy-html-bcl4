@@ -27,7 +27,7 @@ class Sidebar extends AbstractComponent
     public function __construct($id)
     {
         parent::__construct('dummy', 'dummy'.$id);
-        $this->setClass('sidebar');
+        $this->addClass('sidebar');
         $this->requireCss('bcl4/sidebar/style.css');
         $this->requireJs('bcl4/sidebar/script.js');
         $this->button = $this->buttonOpenSidebarFactory($id);
@@ -37,7 +37,7 @@ class Sidebar extends AbstractComponent
     protected function buttonOpenSidebarFactory($id)
     {
         $button = new Tag('button', 'btnOpen'.$id, 'btn btn-xs btn-default bcl4-sidebar-command');
-        $button->att(['data-target' => $id, 'type' => 'button']);
+        $button->attribute(['data-target' => $id, 'type' => 'button']);
         $button->add('&#9776;');
         return $button;
     }
@@ -45,7 +45,7 @@ class Sidebar extends AbstractComponent
     protected function sidebarFactory($id)
     {
         $sidebar = new Tag('div', $id, 'sidebar d-none');
-        $sidebar->att('data-is-open', '0');
+        $sidebar->attribute('data-is-open', '0');
         $sidebar->add($this->buttonCloseFactory($id));
         return $sidebar;
     }
@@ -53,7 +53,7 @@ class Sidebar extends AbstractComponent
     public function buttonCloseFactory($id)
     {
         $button = new Tag('span', null, 'fa fa-times text-secondary float-right bcl4-sidebar-command mr-4');
-        $button->att(['data-target' => $id]);
+        $button->attribute(['data-target' => $id]);
         return $button;
     }
 
