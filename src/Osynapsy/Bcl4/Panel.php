@@ -92,7 +92,7 @@ class Panel extends AbstractComponent
         if (empty($this->currentRow) || ($colspan + $offset) >= 12) {
             $this->addRow();
         }
-        $this->currentRow->length += ($colspan + $offset);
+        $this->currentRowLength += ($colspan + $offset);
         return $this->currentColumn = $this->currentRow->add(new Column($colspan, $offset));
     }
 
