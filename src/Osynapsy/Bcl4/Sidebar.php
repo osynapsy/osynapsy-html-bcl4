@@ -37,7 +37,7 @@ class Sidebar extends AbstractComponent
     protected function buttonOpenSidebarFactory($id)
     {
         $button = new Tag('button', 'btnOpen'.$id, 'btn btn-xs btn-default bcl4-sidebar-command');
-        $button->attribute(['data-target' => $id, 'type' => 'button']);
+        $button->attributes(['data-target' => $id, 'type' => 'button']);
         $button->add('&#9776;');
         return $button;
     }
@@ -53,7 +53,7 @@ class Sidebar extends AbstractComponent
     public function buttonCloseFactory($id)
     {
         $button = new Tag('span', null, 'fa fa-times text-secondary float-right bcl4-sidebar-command mr-4');
-        $button->attribute(['data-target' => $id]);
+        $button->attributes(['data-target' => $id]);
         return $button;
     }
 
