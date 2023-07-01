@@ -14,6 +14,7 @@ namespace Osynapsy\Bcl4;
 use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
 use Osynapsy\Html\Component\InputHidden;
+use Osynaspy\Html\Component\Image;
 
 class ImageBox extends AbstractComponent
 {
@@ -128,7 +129,7 @@ class ImageBox extends AbstractComponent
     protected function imageWithCropActiveFactory()
     {
         $img = new Tag('img', null, 'imagebox-main');
-        $img->attribute([
+        $img->attributes([
             'src' => $this->image['domain'].$this->image['webPath'],
             'data-action' => self::ACTION_CROP_IMAGE
         ]);
