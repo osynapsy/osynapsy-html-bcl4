@@ -45,7 +45,7 @@ class Alert extends AbstractComponent
         if (!$this->isDismissible) {
             return;
         }
-        $this->setClass('alert-dismissible text-center');
+        $this->addClass('alert-dismissible text-center');
         $this->add(' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
     }
 
