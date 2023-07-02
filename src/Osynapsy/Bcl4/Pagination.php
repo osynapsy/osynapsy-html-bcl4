@@ -149,10 +149,12 @@ class Pagination extends AbstractComponent
 
     public function getPageDimensionsCombo()
     {
-        $Combo = new ComboBox($this->pageDimensionFieldIdFactory());
+        $fieldId = $this->pageDimensionFieldIdFactory();
+        $Combo = new ComboBox($fieldId);
         $Combo->setPlaceholder(false);
         $Combo->attribute('onchange',"Osynapsy.refreshComponents(['{$this->parentComponent}'])");
         $Combo->setDataset($this->pageDimensions);
+        $Combo->setValue($_REQUEST[$fieldId] ?? null);
         return $Combo;
     }
 

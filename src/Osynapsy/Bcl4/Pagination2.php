@@ -129,10 +129,12 @@ class Pagination2 extends AbstractComponent implements IPagination
 
     public function getPageDimensionsCombo()
     {
-        $Combo = new ComboBox($this->id.(strpos($this->id, '_') ? '_page_dimension' : 'PageDimension'));
+        $fieldId = $this->id.(strpos($this->id, '_') ? '_page_dimension' : 'PageDimension');
+        $Combo = new ComboBox($fieldId);
         $Combo->setPlaceholder(false);
         $Combo->attribute('onchange',"Osynapsy.refreshComponents(['{$this->parentComponent}'])");
         $Combo->setDataset($this->pageDimensions);
+        $Combo->setValue($_REQUEST[$fieldId] ?? null);
         return $Combo;
     }
 
