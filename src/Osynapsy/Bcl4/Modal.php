@@ -37,7 +37,7 @@ class Modal extends AbstractComponent
         $this->header->add('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
         $this->title->add($title);
         $this->body = $this->content->add(new Tag('div', null, 'modal-body'));
-        $this->footer = $this->content->add(new Tag('div', null, 'modal-footer'));
+        $this->footer = $this->content->add(new Tag('div', null, 'modal-footer d-block'));
     }
 
     public function addFooter($content)
@@ -65,7 +65,6 @@ class Modal extends AbstractComponent
     {
         if (empty($this->panelFoot)){
             $this->panelFoot = $this->addFooter(new Panel($this->id.'PanelFoot'));
-            $this->panelFoot->resetClass();
         }
         return $this->panelFoot;
     }
@@ -79,7 +78,7 @@ class Modal extends AbstractComponent
             $this->columnCommandRight = $this->getPanelFoot()->addColumn(6)->setXs(6)->addClass('text-right');
         }
         if ($addCloseCommand){
-            $ButtonClose = new Button('btnClose'.$this->id,'button', 'Chiudi');
+            $ButtonClose = new Button('btnClose'.$this->id, 'Chiudi', 'btn-warning');
             $ButtonClose->attribute('onclick',"\$('#{$this->id}').modal('hide');");
             array_push($left, $ButtonClose);
         }
