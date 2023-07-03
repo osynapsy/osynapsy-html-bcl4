@@ -26,7 +26,7 @@ class Accordion extends AbstractComponent
         parent::__construct('div', $id);
         $this->requireCss('bcl4/accordion/style.css');
         $this->requireCss('bcl4/panelaccordion/style.css');
-        $this->addClass('class','accordion osy-panel-accordion');
+        $this->addClass('accordion osy-panel-accordion');
         $this->attribute('role','tablist');
         $memoryOpen = filter_input(\INPUT_POST, $this->id);
         $this->defaultOpen = is_null($memoryOpen) ? $defaultOpen : $memoryOpen;
@@ -66,7 +66,7 @@ class Accordion extends AbstractComponent
     private function buildHeader($title, $targetId, $open)
     {
         $h5 = new Tag('h5', null, 'mb-0');
-        $span = $h5->add(new Tag('button', null, 'btn btn-block text-left  collapsed'));
+        $span = $h5->add(new Tag('span', null, ' text-left  collapsed'));
         $span->attributes([
             'type' => 'button',
             'data-toggle' => 'collapse',
