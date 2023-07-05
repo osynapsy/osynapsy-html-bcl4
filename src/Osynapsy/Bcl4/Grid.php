@@ -50,9 +50,9 @@ class Grid extends AbstractComponent
             return;
         }
         if (empty($this->addCommand)) {
-            array_unshift($this->data, $this->addCommand);
+            array_unshift($this->dataset, $this->addCommand);
         }
-        foreach ($this->data as $key => $rec) {
+        foreach ($this->dataset as $key => $rec) {
             $this->addCell($rec, $key, $this->cellSize);
         }
     }
