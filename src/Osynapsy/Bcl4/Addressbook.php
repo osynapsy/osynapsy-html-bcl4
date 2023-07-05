@@ -94,7 +94,7 @@ class Addressbook extends Panel
             case 'checkbox':
                 $checked = '';
                 if (!empty($this->itemSelected[$v])) {
-                    $a->attribute('class','osy-addressbook-item-selected',true);
+                    $a->addClass('osy-addressbook-item-selected');
                     $checked=' checked="checked"';
                 }
                 $a->add('<span class="fa fa-check"></span>');
@@ -106,10 +106,10 @@ class Addressbook extends Panel
                 break;
             case 'hrefModal':
                 $a->add(new Tag('a', null, 'osy-addressbook-link fa fa-pencil fa-pencil-alt open-modal'))
-                  ->attribute(['href' => $v, 'modal-width' => '640px', 'modal-height' => '480px']);
+                  ->attributes(['href' => $v, 'modal-width' => '640px', 'modal-height' => '480px']);
                 break;
             case 'class':
-                $a->attribute('class',$v,true);
+                $a->addClass($v);
                 break;
             case 'img':
                 if (!empty($v)) {
