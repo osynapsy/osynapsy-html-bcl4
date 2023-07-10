@@ -33,7 +33,7 @@ class FormGroup extends AbstractComponent
     public function preBuild()
     {
         if (!empty($this->label)) {
-            $this->add($this->labelFactory());
+            $this->add($this->labelContainerFactory($this->label, $this->object));
         }
         $this->add($this->object);
         if (!empty($this->info)) {
@@ -41,22 +41,24 @@ class FormGroup extends AbstractComponent
         }
     }
 
-    protected function labelFactory()
+    protected function labelContainerFactory($rawlabel, $object)
     {
         $div = new Tag('div', null, 'd-flex');
-        $label = $div->add(new Tag('label', null, sprintf('%s mr-auto', $this->labelClass)));
-        if (is_object($this->object)) {
-            $label->attribute('for',$this->object->id);
-        }
-        if (!is_array($this->label)) {
-            $label->add($this->label);
-        } else {
-            $label->add($this->label[0]);
-        }
-        if (is_array($this->label) && array_key_exists(1, $this->label)) {
-            $div->add($this->label[1]);
+        $div->add($this->labelFactory(!is_array($rawlabel) ? $rawlabel : $rawlabel[0], $object));
+        if (is_array($rawlabel) && array_key_exists(1, $rawlabel)) {
+            $div->add($rawlabel[1]);
         }
         return $div;
+    }
+
+    protected function labelFactory($rawlabel, $object)
+    {
+        $label = new Tag('label', null, sprintf('%s mr-auto', $this->labelClass));
+        if (is_a($object, 'Tag') && $object->id) {
+            $label->attribute('for', $object->id);
+        }
+        $label->add($rawlabel);
+        return $label;
     }
 
     public function setInfo($info)
