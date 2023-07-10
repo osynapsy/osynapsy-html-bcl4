@@ -170,7 +170,9 @@ class PanelTk extends AbstractComponent
         }
         $container = new Tag('div');
         $label = $container->add(new Tag('label', null, $this->buildLabelClass($cellContent)));
-        $label->attribute('for', is_a($cellContent, 'Tag') ? $cellContent->id : '');
+        if (is_a($cellContent, 'Tag') && $cellContent->id) {
+            $label->attribute('for', $cellContent->id);
+        }
         $label->add(trim($cellLabel));
         if (is_array($rawCellLabel)) {
             $container->addFromArray($rawCellLabel);
