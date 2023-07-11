@@ -12,7 +12,6 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Component\CheckList as BaseCheckList;
-use Osynapsy\Html\DOM;
 
 /**
  * Build a list of check
@@ -22,7 +21,7 @@ class CheckList extends BaseCheckList
 {
     /**
      *
-     * @param string $name
+     * @param string $id 
      */
     public function __construct($id)
     {
