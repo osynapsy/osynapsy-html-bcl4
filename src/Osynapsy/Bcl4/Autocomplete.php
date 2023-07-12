@@ -48,6 +48,7 @@ class Autocomplete extends AbstractComponent
     {
         $Autocomplete = new InputGroup($this->id, '', $this->ico);
         $Autocomplete->getTextBox()->onselect = 'event.stopPropagation();';
+        $Autocomplete->getTextBox()->onclick = 'event.stopPropagation();';
         if (!empty($this->decodeEntityIdFunction)) {
             $function = $this->decodeEntityIdFunction;
             $Autocomplete->getTextBox()->setValue($function($value));
