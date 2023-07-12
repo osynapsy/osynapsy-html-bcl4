@@ -19,24 +19,18 @@ class LabelBox extends AbstractComponent
     protected $hiddenBox;
     protected $label;
 
-    public function __construct($id, $label='')
-    {        
+    public function __construct($id)
+    {
         parent::__construct('div', $id.'_labelbox');
         $this->requireCss('bcl4/labelbox/style.css');
         $this->addClass('osynapsy-labelbox');
         $this->hiddenBox = $this->add(new InputHidden($id));
-        $this->add($label);
     }
 
     public function setValue($value)
-    {        
+    {
         $this->hiddenBox->setValue($value);
         return $this;
-    }
-
-    public function setLabelFromSQL($db, $sql, $par=array())
-    {
-        $this->label = $db->findOne($sql, $par);
     }
 
     public function setLabel($label)
@@ -47,11 +41,6 @@ class LabelBox extends AbstractComponent
 
     public function preBuild()
     {
-        if (is_null($this->label)) {
-            $label = isset($_REQUEST[$this->hiddenBox->id]) ? $_REQUEST[$this->hiddenBox->id] : null;
-        } else {
-            $label = $this->label;
-        }
-        $this->add('<span>'.$label.'</span>');
+        $this->add(sprintf('<span>%s</span>', $this->label ?? $this->hiddenBox->getValue()));
     }
 }
