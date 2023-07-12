@@ -25,18 +25,18 @@ class Autocomplete extends AbstractComponent
     protected $hiddenField;
 
     public function __construct($id)
-    {        
+    {
         parent::__construct('div', $id);
         $this->requireJs('bcl4/autocomplete/script.js');
         $this->requireCss('bcl4/autocomplete/style.css');
         $this->addClass('osy-autocomplete');
-        $this->hiddenField = $this->add(new InputHidden('__'.$id));
     }
 
     public function preBuild()
     {
         if (filter_input(\INPUT_SERVER, 'HTTP_OSYNAPSY_HTML_COMPONENTS') != $this->id) {
-            $this->add($this->inputMaskFactory());
+            $value = $this->add(new InputHidden('__'.$this->id))->getValue();
+            $this->add($this->inputMaskFactory($value));
             return;
         }
         $userQuery = filter_input(\INPUT_POST, $this->id);
@@ -44,13 +44,13 @@ class Autocomplete extends AbstractComponent
         $this->add($this->valueListFactory($dataset, $userQuery));
     }
 
-    protected function inputMaskFactory()
+    protected function inputMaskFactory($value)
     {
         $Autocomplete = new InputGroup($this->id, '', $this->ico);
         $Autocomplete->getTextBox()->onselect = 'event.stopPropagation();';
         if (!empty($this->decodeEntityIdFunction)) {
             $function = $this->decodeEntityIdFunction;
-            $Autocomplete->getTextBox()->setValue($function($this->hiddenField->getValue()));
+            $Autocomplete->getTextBox()->setValue($function($value));
         }
         return $Autocomplete;
     }
