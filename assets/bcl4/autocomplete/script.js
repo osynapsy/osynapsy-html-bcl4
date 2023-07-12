@@ -114,15 +114,18 @@ BclAutocomplete =
     init : function()
     {
         document.body.addEventListener('keydown', function(ev) {
-            if (ev.target || ev.target.matches('div.osy-autocomplete input[type=text]')) {
+            if (ev.target && ev.target.matches('div.osy-autocomplete input[type=text]')) {
                 BclAutocomplete.keyPressDispatcher(ev);
             }
         });
-        document.addEventListener('click', function() {
+        document.addEventListener('click', function(ev) {
             if (BclAutocomplete.searchContainers.length === 0) {
                 return;
             }
-            for (idx in BclAutocomplete.searchContainers) {
+            if (!ev.target.matches('div.autocompleteSearchContainer row')) {
+                return;
+            }
+            for (let idx in BclAutocomplete.searchContainers) {
                 let searchContainer = BclAutocomplete.searchContainers[idx];
                     searchContainer.hide();
                 let autoComplete = searchContainer.origin.closest('div.osy-autocomplete');
@@ -134,20 +137,6 @@ BclAutocomplete =
                     eval(autoComplete.getAttribute('onunselect'));
                 }
             }
-            return;
-            let autoCompleteSearchContainer = document.getElementById('search_content');
-            if (!autoCompleteSearchContainer || !('parent' in autoCompleteSearchContainer.dataset)) {
-                return;
-            }
-            let autoCompleteContainer = document.querySelector('div#' + autoCompleteSearchContainer.dataset.parent);
-            let autoCompleteSearchBox = autoCompleteContainer.querySelector('input[type=text]');
-            if (
-                autoCompleteSearchBox.classList.contains('osy-autocomplete-unselected') &&
-                autoCompleteContainer.hasAttribute('onunselected')
-            ) {
-                eval(autoCompleteContainer.getAttribute('onunselect'));
-            }
-            autoCompleteSearchContainer.remove();
         });
     },
     keyPressDispatcher : function(ev)
