@@ -89,25 +89,17 @@ class Tags extends AbstractComponent
         $this->modal->addFooter($buttonAdd);
     }
 
-    public function addDropDown($label, $data)
+    public function addDropDown($label, $dataset)
     {
         $this->dropdown = new Dropdown($this->id.'_list', $label, 'span');
-        $this->dropdown->setData($data);
+        $this->dropdown->setDataset($dataset);
     }
 
     public function addAutoComplete(array $data = [])
     {
         $ajax = filter_input(\INPUT_POST, 'ajax');
         if (empty($ajax)) {
-            $this->autocomplete = new Autocomplete($this->id.'_auto');
-            $this->autocomplete->addAutocompleteClass('input-group-sm');
-            $this->autocomplete->attributes([
-                'style' =>'width: 150px; margin-top: 3px;',
-                'class' => 'd-inline-block'
-            ]);
-            $this->autocomplete->onSelect("\$('#{$this->id} span.fa-plus').click()");
-            $this->autocomplete->setIco('<span class="fa fa-plus tag-append" onclick="BclTags.addTag(\'#'.$this->id.'\');"></span>');
-            return $this->autocomplete;
+            return $this->autocomplete = $this->autocompleteTextBoxFactory();
         }
         if ($ajax != $this->id.'_auto') {
             return;
@@ -115,5 +107,18 @@ class Tags extends AbstractComponent
         $Autocomplete = new Autocomplete($this->id.'_auto');
         $Autocomplete->setData($data);
         die($Autocomplete);
+    }
+
+    protected function autocompleteTextBoxFactory()
+    {
+        $autocomplete = new Autocomplete($this->id.'_auto');
+        $autocomplete->addClass('input-group-sm');
+        $autocomplete->attributes([
+            'style' =>'width: 150px; margin-top: 3px;',
+            'class' => 'd-inline-block'
+        ]);
+        $autocomplete->onSelect("\$('#{$this->id} span.fa-plus').click()");
+        $autocomplete->setIco('<span class="fa fa-plus tag-append" onclick="BclTags.addTag(\'#'.$this->id.'\');"></span>');
+        return $autocomplete;
     }
 }
