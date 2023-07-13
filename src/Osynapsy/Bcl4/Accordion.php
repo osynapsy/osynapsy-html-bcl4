@@ -22,7 +22,7 @@ class Accordion extends AbstractComponent
     private $defaultOpen  = 0;
 
     public function __construct($id, $defaultOpen = 0)
-    {        
+    {
         parent::__construct('div', $id);
         $this->requireCss('bcl4/accordion/style.css');
         $this->requireCss('bcl4/panelaccordion/style.css');
@@ -63,10 +63,30 @@ class Accordion extends AbstractComponent
         return $this->panels[$panelIdx];
     }
 
+    /*public function addPanel2(Panel $Panel, $title, $commands = [])
+    {
+        $panelIdx = count($this->panels);
+        $panelId = $this->id.'_'.$panelIdx;
+        $open = $this->defaultOpen === $panelIdx ? true : false;
+        $Panel->attribute('id', $panelId);
+        $Panel->getHead()->add($this->buildHeader($title, $panelId, $open));
+        $Panel->setClass(
+            'card-body collapse'.($open ? ' show' : ''),
+            'card-header',
+            'card-foot',
+            'card',
+            ''
+        );
+        $Panel->addCommands($commands);
+        $Panel->getBody()->attributes(['id' => $panelId.'_body', 'data-parent' => '#'.$this->id]);
+        $this->panels[] = $Panel;
+        return $this->panels[$panelIdx];
+    }*/
+
     private function buildHeader($title, $targetId, $open)
     {
         $h5 = new Tag('h5', null, 'mb-0');
-        $span = $h5->add(new Tag('span', null, ' text-left  collapsed'));
+        $span = $h5->add(new Tag('span', null, 'c-pointer'));
         $span->attributes([
             'type' => 'button',
             'data-toggle' => 'collapse',
