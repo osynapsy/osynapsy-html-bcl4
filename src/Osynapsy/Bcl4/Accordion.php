@@ -85,7 +85,7 @@ class Accordion extends AbstractComponent
 
     private function buildHeader($title, $targetId, $open)
     {
-        $h5 = new Tag('h5', null, 'mb-0');
+        $h5 = new Tag('span', null, 'mb-0');
         $span = $h5->add(new Tag('span', null, 'c-pointer'));
         $span->attributes([
             'type' => 'button',

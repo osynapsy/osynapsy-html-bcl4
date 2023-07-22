@@ -89,8 +89,8 @@ class Container extends Tag
         $this->AddColumn(12)->add('<h1>'.$title.'</h1>');
     }
 
-    public function setCommand($delete = false, $save = true, $back = true, $offset = 0)
-    {
+    public function setCommand($delete = false, $save = true, $back = true, $fixedBar = false, $offset = 0)
+    {                
         if ($delete) {
             $this->getFoot(true, $offset)->add($this->buttonDeleteFactory());
         }
@@ -100,10 +100,13 @@ class Container extends Tag
         if ($back) {
             $this->getFoot()->add($this->buttonBackFactory());
         }
+        if ($fixedBar) {
+            $this->fixCommandBar();
+        }
     }
 
     public function fixCommandBar($class = 'fixed-bottom py-2 b-light')
     {
-       $this->footClass = $class;
+       $this->foot->addClass($class);
     }
 }
