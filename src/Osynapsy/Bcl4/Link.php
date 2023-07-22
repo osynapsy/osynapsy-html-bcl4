@@ -15,7 +15,7 @@ use Osynapsy\Html\Component\Link as BaseLink;
 
 class Link extends BaseLink
 {
-    public function openInModal($title, $widht = '640px', $height = '480px', $postData = false)
+    public function inModal($widht = '640px', $height = '480px', $postData = false, $title = '')
     {
         $this->addClass('open-modal');
         $this->attributes([
@@ -26,6 +26,7 @@ class Link extends BaseLink
         if ($postData) {
             $this->addClass('postdata');
         }
+        return $this;
     }
 
     public function setDisabled($condition)
