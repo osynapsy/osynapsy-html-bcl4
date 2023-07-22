@@ -107,6 +107,10 @@ class Container extends Tag
 
     public function fixCommandBar($class = 'fixed-bottom py-2 b-light')
     {
-       $this->foot->addClass($class);
+        if (!empty($this->foot)) { 
+            $this->foot->addClass($class);
+        } else {
+            $this->footClass = $class;
+        }
     }
 }
