@@ -15,11 +15,11 @@ use Osynapsy\Html\Component\Link as BaseLink;
 
 class Link extends BaseLink
 {
-    public function inModal($widht = '640px', $height = '480px', $postData = false, $title = '')
+    public function inModal($widht = '640px', $height = '480px', $postData = false, $title = null)
     {
         $this->addClass('open-modal');
         $this->attributes([
-            'title' => $title,
+            'title' => strip_tags($title ?? $this->getChild()),
             'modal-width' => $widht,
             'modal-height' => $height
         ]);
