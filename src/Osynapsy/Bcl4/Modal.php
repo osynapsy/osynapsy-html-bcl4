@@ -82,7 +82,7 @@ class Modal extends AbstractComponent
             $ButtonClose->attribute('onclick',"\$('#{$this->id}').modal('hide');");
             array_push($left, $ButtonClose);
         }
-        $this->columnCommandLeft->addFromArray($left);
-        $this->columnCommandRight->addFromArray($right);
+        $this->columnCommandLeft->append($left);
+        $this->columnCommandRight->append($right);
     }
 }

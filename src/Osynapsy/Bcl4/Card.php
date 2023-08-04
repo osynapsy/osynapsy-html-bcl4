@@ -210,7 +210,7 @@ class Card extends AbstractComponent
             $titleContainer->add($this->collapsableCommandFactory());
         }
         if (!empty($commands)) {
-            $this->getHead()->add(new Tag('div', null, 'ml-auto p2'))->addFromArray($commands);
+            $this->getHead()->add(new Tag('div', null, 'ml-auto p2'))->append($commands);
         }
     }
 

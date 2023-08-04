@@ -133,7 +133,7 @@ class PanelTk extends AbstractComponent
         $label = $cellData['lbl'];
         $content = $cellData['obj'];
         $Cell = new Tag('div', null , $this->buildCellClass($cellData, $width));
-        $Cell->add(new Tag('div', null, 'form-group'))->addFromArray(array_merge(
+        $Cell->add(new Tag('div', null, 'form-group'))->append(array_merge(
             $label === false ? [] : [$this->buildLabel($label, $content)],
             is_array($content) ? $content : [$content]
         ));
@@ -175,7 +175,7 @@ class PanelTk extends AbstractComponent
         }
         $label->add(trim($cellLabel));
         if (is_array($rawCellLabel)) {
-            $container->addFromArray($rawCellLabel);
+            $container->append($rawCellLabel);
         }
         return $container;
     }
