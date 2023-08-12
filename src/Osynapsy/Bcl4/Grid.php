@@ -78,7 +78,8 @@ class Grid extends AbstractComponent
         $id = is_numeric($rawid) ? $this->id.'_cell_'.$rawid : $rawid;
         $Cell = new Tag('div', $id, 'grid-cell '.implode(' ',$this->cellClass));
         $fnc = $this->formatValueFnc;
-        $Cell->add($fnc($rec, $Cell, $this));
+        //$Cell->add($fnc($rec, $Cell, $this));
+        $Cell->append($rec);
         return $Cell;
     }
 
