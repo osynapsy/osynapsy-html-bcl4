@@ -29,6 +29,7 @@ class Switcher extends AbstractComponent
     {
         parent::__construct('div', $id.'_container');
         $this->addClass('custom-control custom-switch');
+        $this->add(sprintf('<input type="hidden" name="%s" value="0">', $id));
         $this->checkBox = $this->add($this->inputCheckFactory($id));
         $this->label = $this->add($this->labelFactory($label, $id));
     }
