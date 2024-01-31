@@ -123,7 +123,7 @@ class Gallery extends AbstractComponent
     protected function buttonDeletePhotoFactory()
     {
         $Button = new Button($this->id.'DeleteImage', 'Elimina foto', 'btn-danger');
-        $Button->setAction('deletePhotoFromGallery', null, 'click-execute', 'Sei sicuro di voler eliminare la foto corrente (L\'operazione non è reversibile)? ');
+        $Button->setAction('deletePhotoFromGallery', [], 'Sei sicuro di voler eliminare la foto corrente (L\'operazione non è reversibile)? ');
         return $Button;
     }
 
