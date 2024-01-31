@@ -100,7 +100,7 @@ class InputGroup extends AbstractComponent
         if (empty($dimension)) {
             return;
         }
-        $this->setClass('input-group-'.$dimension);
+        $this->addClass('input-group-'.$dimension);
     }
 
     public function setSmallSize()
