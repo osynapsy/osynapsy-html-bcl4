@@ -36,7 +36,7 @@ class Gallery extends AbstractComponent
         $this->add($this->modalUploadFactory());
         $this->add($this->modalViewerFactory());
         $row = $this->add(new Tag('div', null, 'row mb-2'));
-        foreach ($this->data as $photo) {
+        foreach ($this->dataset as $photo) {
             $row->add($this->cellFactory($photo));
         }
         if ($this->showCommands) {
