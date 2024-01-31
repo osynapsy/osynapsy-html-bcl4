@@ -55,9 +55,9 @@ class Gallery extends AbstractComponent
     protected function thumbnailFactory($photo)
     {
         $img = new Tag('img', null, 'img-thumbnail mt-2');
-        $img->att(['data-toggle' => 'modal', 'data-target' => sprintf('#%sModalViewer', $this->id)]);
-        $img->att('onclick', sprintf("let src = $(this).attr('src'); $('#%sViewer').attr('src', src); $('#%sDeleteImage').attr('data-action-parameters', src);", $this->id, $this->id));
-        $img->att('src', $photo['url']);
+        $img->attributes(['data-toggle' => 'modal', 'data-target' => sprintf('#%sModalViewer', $this->id)]);
+        $img->attribute('onclick', sprintf("let src = $(this).attr('src'); $('#%sViewer').attr('src', src); $('#%sDeleteImage').attr('data-action-parameters', src);", $this->id, $this->id));
+        $img->attribute('src', $photo['url']);
         return $img;
     }
 
@@ -82,7 +82,7 @@ class Gallery extends AbstractComponent
     protected function buttonOpenModalFactory()
     {
         $Button = new Button($this->id.'Add', 'Aggiungi foto', 'btn btn-primary btn-block');
-        $Button->att(['data-toggle' => 'modal', 'data-target' => '#'.$this->id.'ModalUpload']);
+        $Button->attributes(['data-toggle' => 'modal', 'data-target' => '#'.$this->id.'ModalUpload']);
         return $Button;
     }
 
@@ -130,7 +130,7 @@ class Gallery extends AbstractComponent
     protected function buttonCloseModalFactory($modalId)
     {
         $Button = new Button($modalId.'CloseModal', 'Chiudi', 'btn-danger');
-        $Button->att('data-dismiss','modal');
+        $Button->attribute('data-dismiss', 'modal');
         return $Button;
     }
 
