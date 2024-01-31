@@ -112,7 +112,7 @@ class Gallery extends AbstractComponent
     {
         $modalId = $this->id.'ModalViewer';
         $Modal = new Modal($modalId, 'Foto', $this->modalViewerDimension);
-        $Modal->getPanelBody()->addColumn()->setClass('text-center')->add(new Tag('img', $this->id.'Viewer', 'img-thumbnail'));
+        $Modal->getPanelBody()->addColumn()->addClass('text-center')->add(new Tag('img', $this->id.'Viewer', 'img-thumbnail'));
         $Modal->getPanelFoot()->add($this->buttonCloseModalFactory($modalId));
         if ($this->showCommands) {
             $Modal->getPanelFoot()->add($this->buttonDeletePhotoFactory());
