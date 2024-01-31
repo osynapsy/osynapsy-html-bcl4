@@ -104,7 +104,7 @@ class Gallery extends AbstractComponent
     protected function buttonSendPhotoToGalleryFactory()
     {
         $Button = new Button('btnSendPotoTo'.$this->id, 'Invia foto');
-        $Button->setAction('addPhotoToGallery', $this->id.'File');
+        $Button->setAction('addPhotoToGallery', [$this->id.'File']);
         return $Button;
     }
 
