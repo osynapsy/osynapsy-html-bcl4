@@ -31,7 +31,7 @@ class Gallery extends AbstractComponent
         $this->cellWidth = $cellWidth;
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
         $this->add($this->modalUploadFactory());
         $this->add($this->modalViewerFactory());

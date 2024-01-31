@@ -40,7 +40,7 @@ class FileBox extends AbstractComponent
             ->add('Send');
     }
 
-    protected function __build_extra__()
+    protected function preBuild()
     {
         if (empty($_REQUEST[$this->id])) {
             return;

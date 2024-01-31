@@ -33,7 +33,7 @@ class DataTable extends AbstractComponent
         $this->part['foot'] = new Tag('div');
     }
 
-    public function __build_extra__()
+    public function preBuild()
     {
         $table = $this->add(new Tag('table', null, 'table table-hover'));
         $table->add($this->thead(array_keys($this->data[0])));
