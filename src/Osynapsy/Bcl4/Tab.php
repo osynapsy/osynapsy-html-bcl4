@@ -30,10 +30,10 @@ class Tab extends AbstractComponent
     private $id;
 
     public function __construct($id)
-    {        
+    {
         parent::__construct('dummy');
         $this->requireJs('bcl4/tab/script.js');
-        $this->id = $id;        
+        $this->id = $id;
         $this->add(new InputHidden($id));
         $this->navTab = $this->add($this->navTabFactory($id));
         $this->initTabSelected($id);
@@ -42,7 +42,7 @@ class Tab extends AbstractComponent
 
     protected function initTabSelected($id)
     {
-        $this->tabSelected = empty($_REQUEST['id']) ? "#{$id}_0" : $_REQUEST[$id];
+        $this->tabSelected = $_REQUEST[$id] ?? "#{$id}_0";
     }
 
     protected function navTabFactory($id)
