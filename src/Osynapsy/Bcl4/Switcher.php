@@ -58,4 +58,10 @@ class Switcher extends AbstractComponent
     {
         $this->checkBox->attribute('disabled', 'disabled');
     }
+    
+    public function setAction($action, array $parameters = [], $confirmMessage = null, $eventClass = self::EV_CLICK) 
+    {
+        $this->getCheckBox()->setAction($action, $parameters, $confirmMessage, $eventClass);
+        return $this;
+    }
 }
