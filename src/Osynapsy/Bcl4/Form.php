@@ -58,9 +58,9 @@ class Form extends AbstractComponent
     }
 
     protected function mainComponentFactory($mainComponentClass)
-    {        
+    {
         return new $mainComponentClass($this->id.'_panel');
-    }   
+    }
 
     public function addHeadCommand($object, $space = 1)
     {
@@ -74,12 +74,18 @@ class Form extends AbstractComponent
         $this->headCommand->add($object);
     }
 
-    public function head()
+    public function head($width = null, $offset = 0)
     {
         if (empty($this->head)) {
-            $this->head = new Tag('div', null, 'd-flex flex-md-row flex-column block-header m-b');
+            $this->head = empty($width) ? new Tag('div', null, 'd-flex flex-md-row flex-column block-header m-b') : new Tag('div', null, 'row');
         }
-        return $this->head->add(new Tag('div', null, 'p-2'));
+        $column = $this->head->add(empty($width) ? new Tag('div', null, 'p-2') : new Column($width, $offset));
+        return $column;
+    }
+
+    public function headFlex()
+    {
+        return ;
     }
 
     public function alert($label = null, $type = 'danger')
@@ -124,7 +130,7 @@ class Form extends AbstractComponent
     public function getPanel()
     {
         return $this->body;
-    }   
+    }
 
     public function setCommand($delete = false, $save = true, $back = true, $closeModal = false, $fixbar = false)
     {
@@ -153,7 +159,7 @@ class Form extends AbstractComponent
         $this->body->setType($type);
     }
 
-    public function setTitle($title, $subTitle = null, $size = 6, $hsize = 'h2')
+    public function setTitle($title, $subTitle = null, $size = null, $hsize = 'h2')
     {
         $objTitle = new Tag($hsize);
         $objTitle->add($title);
@@ -161,7 +167,7 @@ class Form extends AbstractComponent
         $column->addClass('mr-auto')->add($objTitle);
         //$this->headCommandWidth -= $size;
         if (!empty($subTitle)) {
-            $column->add('<h4><i>'.$subTitle.'</i></h4>');
+            $column->add(is_scalar($subTitle) ? '<h4><i>'.$subTitle.'</i></h4>' : $subTitle);
         }
         return $objTitle;
     }
