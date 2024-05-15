@@ -13,67 +13,118 @@ namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
 use Osynapsy\Html\Component\AbstractComponent;
+use Osynapsy\Html\Component\IFrame;
 
 class FileBox extends AbstractComponent
 {
     protected $fileBox;
-    protected $deleteCommand;
+    protected $deleteButton;
+    protected $uploadPath;
+    protected $prefix;
+    protected $postfix;
+    protected $pdfPreview = [];
     public $showImage = false;
     public $span;
 
     public function __construct($name, $postfix = false, $prefix = true)
-    {        
-        parent::__construct('dummy', $name);
+    {
+        parent::__construct('div', $name);
         $this->requireJs('bcl4/filebox/script.js');
-        $this->span = $this->add(new Tag('span'));
-        $div = $this->add(new Tag('div', null, 'input-group'));
-        $div->add(new Tag('span', null, 'input-group-btn input-group-prepend'))
-            ->add(new Tag('span', null, 'btn btn-primary btn-file'))
-            ->add('<input type="file" name="'.$name.'"><span class="fa fa-folder-open"></span>');
-        $div->add('<input type="text" class="form-control" readonly>');
-        if (!$postfix) {
-            return;
-        }
-        $div->add(new Tag('span', null, 'input-group-btn input-group-append'))
-            ->add(new Tag('button', null, 'btn btn-primary'))
-            ->att('type','submit')
-            ->add('Send');
+        $this->prefix = $prefix;
+        $this->postfix = $postfix;
     }
 
     public function preBuild()
     {
+        $span = $this->add(new Tag('span'));
+        $component = $this->add($this->fileComponentFactory());
         if (empty($_REQUEST[$this->id])) {
             return;
         }
         if ($this->showImage) {
-            $this->span->add(new Tag('img'))->att('src',$_REQUEST[$this->id]);
+            $span->add(new Tag('img'))->attribute('src', $_REQUEST[$this->id]);
             return;
         }
-        $this->downloadFileFactory();
+        $span->add($this->downloadFileBoxFactory($_REQUEST[$this->id]));
     }
 
-    protected function downloadFileFactory()
+    protected function fileComponentFactory()
     {
-        $pathinfo = pathinfo($_REQUEST[$this->id]);
-        $filename = $pathinfo['filename'].(!empty($pathinfo['extension']) ? '.'.$pathinfo['extension'] : '');
-        $download = new Tag('a');
-        $download->att('target','_blank')->att('href',$_REQUEST[$this->id])->add($filename.' <span class="fa fa-download"></span>');
-        $label = $this->span->add(new LabelBox('donwload_'.$this->id));
-        $label->att('style','padding: 10px; background-color: #ddd; margin-bottom: 10px;');
-        $label->setLabel($download, $this->deleteCommand);
-        $this->span->add($label);
+        $component = new Tag('div', null, 'input-group');
+        $component->add($this->prefixFactory());
+        $component->add('<input type="text" class="form-control" readonly>');
+        if (!empty($this->postfix)) {
+            $component->add($this->postfixFactory($this->postfix));
+        }
+        return $component;
+    }
+
+    protected function prefixFactory()
+    {
+        $Button = new Tag('span', null, 'btn btn-primary btn-file');
+        $Button->add('<input type="file" name="'.$this->id.'">');
+        $Button->add('<span class="fa fa-folder-open"></span>');
+        $Prefix = new Tag('span', null, 'input-group-btn input-group-prepend');
+        $Prefix->add($Button);
+        return $Prefix;
+    }
+
+    protected function postfixFactory($postfix)
+    {
+        $postfixContainer = new Tag('span', null, 'input-group-btn input-group-append');
+        $postfixContainer->add(is_scalar($postfix) ? $this->buttonSendFileFactory($postfix) : $postfix);
+        return $postfixContainer;
+    }
+
+    protected function buttonSendFileFactory($label)
+    {
+        $Button = new Button('btnSend'.$this->id, is_bool($label) ? 'Send' : $label, 'btn-primary');
+        $Button->attribute('type', 'submit');
+        return $Button;
+    }
+
+    protected function downloadFileBoxFactory($filePath)
+    {
+        $pathinfo = pathinfo($filePath);
+        $dummy = new Tag('dummy');
+        if (!empty($this->pdfPreview) && strtolower($pathinfo['extension']) === 'pdf') {
+            $dummy->add($this->previewPdfFactory($filePath));
+        }
+        $dummy->add($this->labelBoxFileFactory($pathinfo['basename']));
+        return $dummy;
+    }
+
+    protected function previewPdfFactory($documentWebPath)
+    {
+        $IFrame = new IFrame('preview', $documentWebPath);
+        $IFrame->attribute('style', sprintf('width: %s; min-height: %s; border: 1px solid #ddd', $this->pdfPreview['width'], $this->pdfPreview['height']));
+        return $IFrame;
+    }
+
+    protected function labelBoxFileFactory($filename)
+    {
+        $LabelBox = new LabelBox('donwload_'.$this->id);
+        $LabelBox->attribute('style','padding: 10px; background-color: #ddd; margin-bottom: 10px;');
+        $LabelBox->setLabel($this->buttonDownloadFileFactory($filename) . $this->deleteButton);
+        return $LabelBox;
+    }
+
+    protected function buttonDownloadFileFactory($filename)
+    {
+        $Button = new Link(false, $_REQUEST[$this->id], $filename.' <span class="fa fa-download"></span>');
+        $Button->attribute('target','_blank');
+        return $Button;
     }
 
     public function setDeleteAction($action, $parameters = [], $confirmMessage = null)
     {
-        $button = new Tag('span', null, 'fa fa-close click-execute float-right');
-        $button->att('data-action', $action);
-        if (!empty($parameters)) {
-            $button->att('data-action-parameters', implode(',', $parameters));
-        }
-        if (!empty($confirmMessage)) {
-            $button->att('data-confirm', $confirmMessage);
-        }
-        $this->deleteCommand = $button;
+        $Button = new Link(false, false, '', 'fa fa-trash float-right');
+        $Button->setAction($action, $parameters, $confirmMessage);
+        $this->deleteButton = $Button;
+    }
+
+    public function enablePdfPreview($width = '100%', $height = '640px')
+    {
+        $this->pdfPreview = ['width' => $width, 'height' => $height];
     }
 }
