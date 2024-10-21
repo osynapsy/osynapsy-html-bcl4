@@ -165,7 +165,9 @@ class Form extends AbstractComponent
         $objTitle->add($title);
         $column = $this->head($size);
         $column->addClass('mr-auto')->add($objTitle);
-        //$this->headCommandWidth -= $size;
+        if (!empty($size) && $size < 8) {
+            $this->headCommandWidth -= $size;
+        }
         if (!empty($subTitle)) {
             $column->add(is_scalar($subTitle) ? '<h4><i>'.$subTitle.'</i></h4>' : $subTitle);
         }
