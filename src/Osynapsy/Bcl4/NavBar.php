@@ -22,7 +22,7 @@ use Osynapsy\Html\Component\Link;
 class NavBar extends AbstractComponent
 {
     protected $brand;
-    protected $brandPrefix;
+    protected $navbarToggler;
     protected $containerClass;
 
     /**
@@ -70,16 +70,13 @@ class NavBar extends AbstractComponent
      * @return type
      */
     private function buildHeader()
-    {
-        $brand = $this->brand;
-        $brandPrefix = $this->brandPrefix;
-        if (!empty($brandPrefix)) {
-            $this->add($brandPrefix);
+    {        
+        if (!empty($this->brand)) {
+            $this->add($this->brand);
         }
-        if (!empty($brand)) {
-            $this->add(new Link(false, $brand[1], $brand[0], 'navbar-brand'));
+        if (!empty($this->navbarToggler)) {
+            $this->add($this->buttonNavBarTogglerFactory());
         }
-        $this->add($this->buttonNavBarTogglerFactory());
     }
 
     protected function buttonNavBarTogglerFactory()
@@ -108,7 +105,7 @@ class NavBar extends AbstractComponent
     private function buildUlMenu(array $data, $level = 0, $dropdownMenuClass = 'dropdown-menu')
     {
         //Add ul menù container;
-        $ul = new Tag('ul', null, empty($level) ? 'navbar-nav' : $dropdownMenuClass);
+        $ul = new Tag('ul', null, empty($level) ? 'navbar-nav nav' : $dropdownMenuClass);
         if (empty($data) || !is_array($data)) {
             return $ul;
         }
@@ -176,10 +173,12 @@ class NavBar extends AbstractComponent
      */
     public function setBrand($label, $href = '#', $prefix = null)
     {
-        $this->brand = [$label, $href];
-        $this->brandPrefix = $prefix;
-        return $this;
-    }
+        $this->brand = new Tag('dummy');
+        if (!empty($prefix)) {
+            $this->brand->add($prefix);
+        }
+        return $this->brand->add(new Link(false, $href, $label, 'navbar-brand'));        
+    }    
 
     /**
      * Set data necessary for build NavBar.
@@ -204,5 +203,10 @@ class NavBar extends AbstractComponent
     {
         $this->addClass('fixed-top');
         return $this;
+    }
+    
+    public function setToggler(bool $visibility)
+    {
+        $this->navbarToggler = $visibility;
     }
 }
