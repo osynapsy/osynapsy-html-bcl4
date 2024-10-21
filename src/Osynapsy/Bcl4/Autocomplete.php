@@ -17,6 +17,8 @@ use Osynapsy\Html\Component\InputHidden;
 
 class Autocomplete extends AbstractComponent
 {
+    const EV_SELECT = 'onselect';
+
     protected $emptyMessage = 'No value match ';
     protected $autocompleteclass = ['osy-autocomplete'];
     protected $ico = '<span class="fa fa-search"></span>';
@@ -141,5 +143,12 @@ class Autocomplete extends AbstractComponent
     public function setDatasource(callable $datasourceFunction)
     {
         $this->datasourceFunction = $datasourceFunction;
+    }
+
+    public function setAction($action, array $parameters = [], $confirmMessage = null, $eventClass = self::EV_SELECT)
+    {
+        parent::setAction($action, $parameters, $confirmMessage, $eventClass);
+        $this->onSelect(sprintf("Osynapsy.action.execute(document.querySelector('div#%s'));", $this->id));
+        return $this;
     }
 }
