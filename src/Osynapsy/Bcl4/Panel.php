@@ -96,6 +96,11 @@ class Panel extends AbstractComponent
         return $this->currentColumn = $this->currentRow->add(new Column($colspan, $offset));
     }
 
+    public function getColumn()
+    {
+        return $this->currentColumn;
+    }
+    
     public function getBody()
     {
         return $this->sections['body'];
