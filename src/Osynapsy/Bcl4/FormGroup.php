@@ -35,7 +35,7 @@ class FormGroup extends AbstractComponent
         if (!empty($this->label)) {
             $this->add($this->labelContainerFactory($this->label, $this->object));
         }
-        $this->add($this->object);
+        $this->append($this->object);
         if (!empty($this->info)) {
             $this->add(sprintf('<div class="form-group-infobox">%s</div>', $this->info));
         }
