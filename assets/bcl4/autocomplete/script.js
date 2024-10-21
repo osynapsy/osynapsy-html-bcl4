@@ -110,7 +110,7 @@
 
 BclAutocomplete =
 {
-    timeoutHandle : null,
+    timeoutHandles : [],
     init : function()
     {
         document.body.addEventListener('keydown', function(ev) {
@@ -141,6 +141,7 @@ BclAutocomplete =
     },
     keyPressDispatcher : function(ev)
     {
+        let timeBeforeSelectSingleResult = 1000;
         let searchContainer = BclAutocomplete.getSearchContainer(ev.target);
         switch (ev.keyCode) {
             case 13 : //Enter
@@ -159,24 +160,33 @@ BclAutocomplete =
                 ev.preventDefault();
                 searchContainer.arrowDown();
                 break;
-            default:
-                if (BclAutocomplete.timeoutHandle) {
-                    clearTimeout(BclAutocomplete.timeoutHandle);
-                }
+            case 8: //Backspace
+                timeBeforeSelectSingleResult = false;
+            default:                
+                this.clearTimeouts();                
                 if (ev.target.value !== '') {
-                    BclAutocomplete.timeoutHandle = setTimeout(
+                    BclAutocomplete.timeoutHandles.push(setTimeout(
                         function() {
-                            BclAutocomplete.refreshSearchResult(ev.target, searchContainer);
+                            BclAutocomplete.refreshSearchResult(ev.target, searchContainer, timeBeforeSelectSingleResult);
                         },
-                        400
-                    );
+                        600
+                    ));            
                 } else {
                     searchContainer.hide();
                 }
                 break;
         }
     },
-    refreshSearchResult : function(origin, searchContainer)
+    clearTimeouts : function () {
+        if (this.timeoutHandles.length === 0) {
+            return;
+        }
+        for (i in this.timeoutHandles) {
+            clearTimeout(this.timeoutHandles[i]);
+        }
+        this.timeoutHandles = [];
+    },
+    refreshSearchResult : function(origin, searchContainer, timeBeforeSelectSingleResult)
     {
         origin.classList.add('osy-autocomplete-unselected');
         origin.closest('div.osy-autocomplete').querySelector('input[type=hidden]').value = '';
@@ -200,6 +210,9 @@ BclAutocomplete =
             searchContainer.innerHTML = '';
             items.forEach(function(item) { searchContainer.appendChild(item); });
             searchContainer.show();
+            if (items.length === 1 && timeBeforeSelectSingleResult) {
+                setTimeout(function() { $('.item').click(); }, timeBeforeSelectSingleResult);
+            }
         })
         .catch(function (error) {
             console.log(error);
