@@ -18,8 +18,8 @@ class autocompleteSearchResultContainer
         this.elm.addEventListener('click', this.selectRow);
         this.elm.arrowUp = this.arrowUp;
         this.elm.arrowDown = this.arrowDown;
-        this.elm.show = function() { this.style.display = 'block'; };
-        this.elm.hide = function() { this.style.display = 'none'; };
+        this.elm.show = () => this.elm.style.display = 'block';
+        this.elm.hide = () => this.elm.style.display = 'none';
         this.elm.origin = origin;
         return this.elm;
     }
@@ -87,14 +87,14 @@ class autocompleteSearchResultContainer
     }
 
     selectRow(ev)
-    {
+    {        
         if (!ev.target || !ev.target.matches('div.item')) {
             return;
         }
         let self = ev.target;
         if (self.classList.contains('empty-message')) {
             return;
-        }
+        }        
         ev.preventDefault();
         let searchContainer = self.closest('div.osy-autocomplete-listbox');
         let autocomplete = searchContainer.origin.closest('div.osy-autocomplete');
@@ -112,40 +112,10 @@ BclAutocomplete =
 {
     timeoutHandles : [],
     init : function()
-    {
-        document.body.addEventListener('keydown', function(ev) {
-            if (ev.target && ev.target.matches('div.osy-autocomplete input[type=text]')) {
-                BclAutocomplete.keyPressDispatcher(ev);
-            }
-        });
-        document.body.addEventListener('focusout', function(ev) {
-            if (ev.target && ev.target.matches('div.osy-autocomplete input[type=text]')) {                
-                let searchContainer = BclAutocomplete.getSearchContainer(ev.target);
-                if (searchContainer) {
-                    searchContainer.hide();
-                }
-            }
-        });
-        document.addEventListener('click', function(ev) {
-            if (BclAutocomplete.searchContainers.length === 0) {
-                return;
-            }
-            if (!ev.target.matches('div.autocompleteSearchContainer row')) {
-                return;
-            }
-            for (let idx in BclAutocomplete.searchContainers) {
-                let searchContainer = BclAutocomplete.searchContainers[idx];
-                    searchContainer.hide();
-                let autoComplete = searchContainer.origin.closest('div.osy-autocomplete');
-                if(autoComplete.querySelector('input[type=hidden]').value) {
-                    return;
-                }
-                searchContainer.origin.value = '';
-                if (autoComplete.getAttribute('onunselect')) {
-                    eval(autoComplete.getAttribute('onunselect'));
-                }
-            }
-        });
+    {        
+        Osynapsy.element('body')
+        .on('keydown', 'div.osy-autocomplete input[type=text]', ev => BclAutocomplete.keyPressDispatcher(ev))
+        .on('focusout', 'div.osy-autocomplete input[type=text]', ev => setTimeout(() => BclAutocomplete.getSearchContainer(ev.target).hide(), 500));         
     },
     keyPressDispatcher : function(ev)
     {
@@ -172,29 +142,25 @@ BclAutocomplete =
                 break;            
             case 8: //Backspace
                 timeBeforeSelectSingleResult = false;            
-            default:                
-                this.clearTimeouts();                
-                if (ev.target.value !== '') {
-                    BclAutocomplete.timeoutHandles.push(setTimeout(
-                        function() {
-                            BclAutocomplete.refreshSearchResult(ev.target, searchContainer, timeBeforeSelectSingleResult);
-                        },
-                        600
-                    ));            
-                } else {
-                    searchContainer.hide();
-                }
+            default:
+                this.updateSearch(ev.target, searchContainer, timeBeforeSelectSingleResult);                                
                 break;
         }
     },
+    updateSearch : function(elm, searchContainer, timeBeforeSelectSingleResult) {
+        this.clearTimeouts();
+        if (elm.value === '') {
+            searchContainer.hide();
+            return;
+        }        
+        this.timeoutHandles.push(setTimeout(
+            () => BclAutocomplete.refreshSearchResult(elm, searchContainer, timeBeforeSelectSingleResult), 
+            600
+        ));
+    },
     clearTimeouts : function ()
     {
-        if (this.timeoutHandles.length === 0) {
-            return;
-        }
-        for (i in this.timeoutHandles) {
-            clearTimeout(this.timeoutHandles[i]);
-        }
+        this.timeoutHandles.forEach(timeoutId => clearTimeout(timeoutId));        
         this.timeoutHandles = [];
     },
     refreshSearchResult : function(origin, searchContainer, timeBeforeSelectSingleResult)
@@ -210,7 +176,7 @@ BclAutocomplete =
             body : new FormData(origin.closest('form'))
         })
         .then(response => response.text())
-        .then(function (response) {
+        .then(response => {
             let parser = new DOMParser();
             let htmlDoc = parser.parseFromString(response, 'text/html');
             let items = htmlDoc.querySelectorAll('.item');
@@ -219,32 +185,22 @@ BclAutocomplete =
                 return;
             }
             searchContainer.innerHTML = '';
-            items.forEach(function(item) { searchContainer.appendChild(item); });
+            items.forEach(item => searchContainer.appendChild(item));
             searchContainer.show();
             if ($(items).hasClass('empty-message')) {
-                BclAutocomplete.timeoutHandles.push(setTimeout(
-                    function() {  searchContainer.hide(); }, 
-                    2000
-                ));
+                BclAutocomplete.timeoutHandles.push(setTimeout(() => searchContainer.hide(),  2000));
             } else if (items.length === 1 && timeBeforeSelectSingleResult) {
-                BclAutocomplete.timeoutHandles.push(setTimeout(
-                    function() { 
-                        $('.item').click(); 
-                    }, 
-                    timeBeforeSelectSingleResult
-                ));
+                BclAutocomplete.timeoutHandles.push(setTimeout(() => $('.item').click(), timeBeforeSelectSingleResult));
             }
         })
-        .catch(function (error) {
-            console.log(error);
-        });
+        .catch(error => console.log(error));
     },
     getSearchContainer(origin)
     {
         let originId = origin.getAttribute('id');
         if (!(originId in this.searchContainers)) {
             this.searchContainers[originId] = this.searchContainerFactory(origin);
-            $(document.body).append(this.searchContainers[originId]);
+            document.body.append(this.searchContainers[originId]);
         }
         return this.searchContainers[originId];
     },
@@ -256,7 +212,7 @@ BclAutocomplete =
 };
 
 if (window.Osynapsy) {
-    Osynapsy.plugin.register('BclAutocomplete',function(){
+    Osynapsy.plugin.register('BclAutocomplete', function() {
         BclAutocomplete.init();
     });
 }
