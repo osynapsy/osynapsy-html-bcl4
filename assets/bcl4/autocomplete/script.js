@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
- class autocompleteSearchResultContainer
+class autocompleteSearchResultContainer
 {
     constructor(origin)
     {
@@ -187,7 +187,8 @@ BclAutocomplete =
                 break;
         }
     },
-    clearTimeouts : function () {
+    clearTimeouts : function ()
+    {
         if (this.timeoutHandles.length === 0) {
             return;
         }
