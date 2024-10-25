@@ -120,7 +120,7 @@ BclAutocomplete =
     keyPressDispatcher : function(ev)
     {
         let timeBeforeSelectSingleResult = 1000;
-        let searchContainer = BclAutocomplete.getSearchContainer(ev.target);
+        let searchContainer = this.getSearchContainer(ev.target);
         switch (ev.keyCode) {
             case 9: //Tab
                 break;
