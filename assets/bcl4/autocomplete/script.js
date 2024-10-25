@@ -118,6 +118,14 @@ BclAutocomplete =
                 BclAutocomplete.keyPressDispatcher(ev);
             }
         });
+        document.body.addEventListener('focusout', function(ev) {
+            if (ev.target && ev.target.matches('div.osy-autocomplete input[type=text]')) {                
+                let searchContainer = BclAutocomplete.getSearchContainer(ev.target);
+                if (searchContainer) {
+                    searchContainer.hide();
+                }
+            }
+        });
         document.addEventListener('click', function(ev) {
             if (BclAutocomplete.searchContainers.length === 0) {
                 return;
@@ -144,24 +152,26 @@ BclAutocomplete =
         let timeBeforeSelectSingleResult = 1000;
         let searchContainer = BclAutocomplete.getSearchContainer(ev.target);
         switch (ev.keyCode) {
+            case 9: //Tab
+                break;
             case 13 : //Enter
                 let selectedRow = searchContainer.querySelector('.item.selected');
                 if (selectedRow) { selectedRow.click(); }
-                break;
-            case 27 :
+                break;           
+            case 27 : //Esc
                 ev.preventDefault();
                 searchContainer.hide();
                 break;
-            case 38 : // up
+            case 38 : //Up
                 ev.preventDefault();
                 searchContainer.arrowUp();
                 break;
-            case 40 : //down
+            case 40 : //Down
                 ev.preventDefault();
                 searchContainer.arrowDown();
-                break;
+                break;            
             case 8: //Backspace
-                timeBeforeSelectSingleResult = false;
+                timeBeforeSelectSingleResult = false;            
             default:                
                 this.clearTimeouts();                
                 if (ev.target.value !== '') {
