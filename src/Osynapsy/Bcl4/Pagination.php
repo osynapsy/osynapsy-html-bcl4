@@ -12,19 +12,18 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\DOM;
 use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Component\InputHidden;
 use Osynapsy\Database\PaginatorSimple;
+use Osynapsy\Database\Driver\DboInterface;
 
 /**
  * Description of Pagination
  *
- * @author Pietro Celeste
+ * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
 class Pagination extends AbstractComponent
 {
-    private $columns = [];
     private $entity = 'Record';
     protected $data = [];
     protected $pageDimensionPalceholder = '- Dimensione pagina -';
@@ -51,41 +50,49 @@ class Pagination extends AbstractComponent
         10 => ['100', '100 righe'],
         20 => ['200', '200 righe']
     ];
+
     /**
      * Costructor of pager component.
      *
      * @param type $id Identify of component
      * @param type $pageDimension Page dimension in number of row
      * @param type $tag Tag of container
-     * @param type $infiniteContainer Enable infinite scroll?
      */
-    public function __construct($id, $pageDimension = 10, $tag = 'div', $infiniteContainer = false)
+    public function __construct($id, $pageDimension = 10, $tag = 'div')
     {
         parent::__construct($tag, $id);
         $this->requireJs('bcl4/pagination/script.js');
         $this->addClass('BclPagination');
-        if (!empty($infiniteContainer)) {
-            $this->setInfiniteScroll($infiniteContainer);
-        }
         if ($tag == 'form') {
-            $this->attribute('method','post');
+            $this->attribute('method', 'post');
         }
         $this->setPageDimension($pageDimension);
-        $this->add(new InputHidden($this->id))->addClass('BclPaginationCurrentPage');
-        $this->add(new InputHidden($this->id.'OrderBy'))->addClass('BclPaginationOrderBy');
     }
 
     public function preBuild()
     {
+        $this->add(new InputHidden($this->id, 'BclPaginationCurrentPage'));
+        $this->add(new InputHidden($this->id.'OrderBy', 'BclPaginationOrderBy'));
         if (!$this->loaded) {
             $this->loadData();
         }
-
         foreach($this->fields as $field) {
             $this->add(new InputHidden($field, $field.'_hidden'));
         }
         list($pageMin, $pageMax) = $this->calcPageMinMax();
         $this->add($this->ulFactory($pageMin, $pageMax));
+    }
+
+    public function loadData($defaultPage = null)
+    {
+        $requestPage = filter_input(\INPUT_POST, $this->id) ?? $defaultPage;
+        $sort = $this->getSort(filter_input(\INPUT_POST, $this->id.'OrderBy'));
+        $pageDimension = $this->statistics['pageDimension'];
+        $paginator = new PaginatorSimple($this->id.'Paginator', $this->db, $this->sql, $this->par);
+        $this->data = $paginator->get($requestPage, $pageDimension, $sort);
+        $this->statistics = $paginator->getAllMeta();
+        $this->loaded = true;
+        return $this->data;
     }
 
     protected function calcPageMinMax()
@@ -127,18 +134,6 @@ class Pagination extends AbstractComponent
     public function addFilter($field, $value = null)
     {
         $this->filters[$field] = $value;
-    }
-
-    public function loadData($defaultPage = null)
-    {
-        $requestPage = filter_input(\INPUT_POST, $this->id) ?? $defaultPage;
-        $sort = $this->getSort(filter_input(\INPUT_POST, $this->id.'OrderBy'));
-        $pageDimension = $this->statistics['pageDimension'];
-        $paginator = new PaginatorSimple($this->id.'Paginator', $this->db, $this->sql, $this->par);
-        $this->data = $paginator->get($requestPage, $pageDimension, $sort);
-        $this->statistics = $paginator->getAllMeta();
-        $this->loaded = true;
-        return $this->data;
     }
 
     public function getSort($requestSort)
@@ -185,17 +180,6 @@ class Pagination extends AbstractComponent
         return array_key_exists($key, $this->statistics) ? $this->statistics[$key] : null;
     }
 
-    public function setInfiniteScroll($container)
-    {
-        $this->requireJs('Lib/imagesLoaded-4.1.1/imagesloaded.js');
-        $this->requireJs('Lib/wookmark-2.1.2/wookmark.js');
-        $this->attribute('class','infinitescroll',true)->attribute('style','display: none');
-        if ($container[0] != '#' ||  $container[0] != '#') {
-            $container = '#'.$container;
-        }
-        return $this->attribute('data-container',$container);
-    }
-
     public function setOrder($field)
     {
         $this->orderBy = str_replace(['][', '[', ']'], [',' ,'' ,''], $field);
@@ -236,11 +220,11 @@ class Pagination extends AbstractComponent
         $this->position = $position;
     }
 
-    public function setSql($db, $cmd, array $par = array())
+    public function setSql(DboInterface $Dbo, $query, array $queryParameters = [])
     {
-        $this->db = $db;
-        $this->sql = $cmd;
-        $this->par = $par;
+        $this->db = $Dbo;
+        $this->sql = $query;
+        $this->par = $queryParameters;
         return $this;
     }
 
