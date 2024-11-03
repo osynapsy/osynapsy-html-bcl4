@@ -171,7 +171,7 @@ class Form extends AbstractComponent
         if (!empty($subTitle)) {
             $column->add(is_scalar($subTitle) ? '<h4><i>'.$subTitle.'</i></h4>' : $subTitle);
         }
-        return $objTitle;
+        return $column;
     }
 
     public function resetClass()
