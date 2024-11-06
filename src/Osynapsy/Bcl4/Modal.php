@@ -85,4 +85,9 @@ class Modal extends AbstractComponent
         $this->columnCommandLeft->append($left);
         $this->columnCommandRight->append($right);
     }
+
+    public function __call($method, $args)
+    {
+        return call_user_func_array([$this->getPanelBody(), $method], $args);
+    }
 }
