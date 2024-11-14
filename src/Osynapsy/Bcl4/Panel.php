@@ -114,6 +114,11 @@ class Panel extends AbstractComponent
         return $this->sections['head'];
     }
 
+    public function getRow()
+    {
+        return $this->currentRow ?? $this->addRow();
+    }
+    
     public function resetClass()
     {
         $this->setClass('','','','');
