@@ -81,10 +81,13 @@ class Column extends AbstractComponent
 
     public function push($label, $object, $sublabel = '', $class = 'form-group')
     {
-        if ($object instanceof Tag) {
-            $object->attribute('data-label', strip_tags(is_array($label) ? $label[0] : $label));
+        $objects = is_array($object) ? $object : [$object];
+        foreach($objects as &$obj) { 
+            if ($obj instanceof Tag) {
+                $obj->attribute('data-label', strip_tags(is_array($label) ? $label[0] : $label));
+            }
         }
-        $this->add(new FormGroup($object, $label, $class))->setInfo($sublabel);
+        $this->add(new FormGroup($objects, $label, $class))->setInfo($sublabel);
         return $this;
     }
 }
