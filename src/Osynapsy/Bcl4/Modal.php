@@ -78,7 +78,7 @@ class Modal extends AbstractComponent
             $this->columnCommandRight = $this->getPanelFoot()->addColumn(6)->setXs(6)->addClass('text-right');
         }
         if ($addCloseCommand){
-            $ButtonClose = new Button('btnClose'.$this->id, 'Chiudi', 'btn-warning');
+            $ButtonClose = new Button('btnClose'.$this->id, 'Chiudi', 'btn-secondary');
             $ButtonClose->attribute('onclick',"\$('#{$this->id}').modal('hide');");
             array_push($left, $ButtonClose);
         }
