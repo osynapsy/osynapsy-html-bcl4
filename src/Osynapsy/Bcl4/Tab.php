@@ -31,12 +31,12 @@ class Tab extends AbstractComponent
 
     public function __construct($id)
     {
-        parent::__construct('dummy');
+        parent::__construct('div');
         $this->requireJs('bcl4/tab/script.js');
         $this->id = $id;
-        $this->add(new InputHidden($id));
-        $this->navTab = $this->add($this->navTabFactory($id));
         $this->initTabSelected($id);
+        $this->add(new InputHidden($id))->setValue($this->tabSelected);
+        $this->navTab = $this->add($this->navTabFactory($id));        
         $this->tabContent = $this->add(new Tag('div', null, 'tab-content p-2 bg-white border-left border-right border-bottom'));
     }
 
@@ -48,10 +48,7 @@ class Tab extends AbstractComponent
     protected function navTabFactory($id)
     {
         $NavTab = new Tag('ul', $id.'_nav', 'nav nav-tabs mt-1');
-        $NavTab->attributes([
-            'role' => 'tablist',
-            'data-tabs' => 'tabs'
-        ]);
+        $NavTab->attributes(['role' => 'tablist', 'data-tabs' => 'tabs']);
         return $NavTab;
     }
 
