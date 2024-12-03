@@ -31,7 +31,7 @@ class NavBar extends AbstractComponent
      * @param string $id
      */
     public function __construct($id, $class = null)
-    {        
+    {
         parent::__construct('nav', $id);
         $this->requireCss('bcl4/navbar/style.css');
         $this->requireJs('bcl4/navbar/script.js');
@@ -70,7 +70,7 @@ class NavBar extends AbstractComponent
      * @return type
      */
     private function buildHeader()
-    {        
+    {
         if (!empty($this->brand)) {
             $this->add($this->brand);
         }
@@ -90,7 +90,7 @@ class NavBar extends AbstractComponent
             'aria-expanded' => "false",
             'aria-label' => "Toggle navigation"
         ]);
-        $Button->add('<span class="navbar-toggler-icon fa fa-bars"></span>');
+        $Button->add('<span class="navbar-toggler-icon fa fa-bars text-white"></span>');
         return $Button;
     }
 
@@ -177,8 +177,8 @@ class NavBar extends AbstractComponent
         if (!empty($prefix)) {
             $this->brand->add($prefix);
         }
-        return $this->brand->add(new Link(false, $href, $label, 'navbar-brand'));        
-    }    
+        return $this->brand->add(new Link(false, $href, $label, 'navbar-brand'));
+    }
 
     /**
      * Set data necessary for build NavBar.
@@ -204,7 +204,7 @@ class NavBar extends AbstractComponent
         $this->addClass('fixed-top');
         return $this;
     }
-    
+
     public function setToggler(bool $visibility)
     {
         $this->navbarToggler = $visibility;
