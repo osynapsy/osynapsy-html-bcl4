@@ -27,12 +27,13 @@ class autocompleteSearchResultContainer
     calcSearchContainerPosition(origin)
     {
         let originPos = this.position(origin);
-        var windowWidth = window.innerWidth;
-        var windowHeight = window.innerHeight;
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
+        let containerWidth = origin.hasAttribute('searchbox-width') ? origin.getAttribute('searchbox-width') : originPos.width;         
         let containerPos = {
             top   : originPos.bottom,
             left  : originPos.left,
-            width : originPos.width,
+            width : Math.min(containerWidth, windowWidth),
             height: Math.max(100, windowHeight - (originPos.bottom + 50))
         };
         if (500 > (windowWidth - originPos.left)) {

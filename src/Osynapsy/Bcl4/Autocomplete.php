@@ -25,6 +25,7 @@ class Autocomplete extends AbstractComponent
     protected $decodeEntityIdFunction;
     protected $datasourceFunction;
     protected $hiddenField;
+    protected $searchBoxWidth;
 
     public function __construct($id)
     {
@@ -54,6 +55,9 @@ class Autocomplete extends AbstractComponent
         if (!empty($this->decodeEntityIdFunction)) {
             $function = $this->decodeEntityIdFunction;
             $Autocomplete->getTextBox()->setValue($function($value));
+        }
+        if (!empty($this->searchBoxWidth)) {
+            $Autocomplete->getTextBox()->attribute('searchbox-width', $this->searchBoxWidth);
         }
         return $Autocomplete;
     }
@@ -150,5 +154,10 @@ class Autocomplete extends AbstractComponent
         parent::setAction($action, $parameters, $confirmMessage, $eventClass);
         $this->onSelect(sprintf("Osynapsy.action.execute(document.querySelector('div#%s'));", $this->id));
         return $this;
+    }
+
+    public function setSearchBoxWidth($width)
+    {
+        $this->searchBoxWidth = $width;
     }
 }
