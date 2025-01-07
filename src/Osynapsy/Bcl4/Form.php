@@ -79,13 +79,8 @@ class Form extends AbstractComponent
         if (empty($this->head)) {
             $this->head = empty($width) ? new Tag('div', null, 'd-flex flex-md-row flex-column block-header m-b') : new Tag('div', null, 'row');
         }
-        $column = $this->head->add(empty($width) ? new Tag('div') : new Column($width, $offset));
+        $column = $this->head->add(empty($width) ? new Tag('div', null, 'p-2') : new Column($width, $offset));
         return $column;
-    }
-
-    public function headFlex()
-    {
-        return ;
     }
 
     public function alert($label = null, $type = 'danger')
