@@ -46,7 +46,7 @@ class FormGroup extends AbstractComponent
         $div = new Tag('div', null, 'd-flex');
         $div->add($this->labelFactory(!is_array($rawlabel) ? $rawlabel : $rawlabel[0], $object));
         if (is_array($rawlabel) && array_key_exists(1, $rawlabel)) {
-            $div->add($rawlabel[1]);
+            $div->append($rawlabel[1]);
         }
         return $div;
     }
