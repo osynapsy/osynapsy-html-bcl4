@@ -11,6 +11,8 @@ use Osynapsy\Html\Component\RadioBox;
  */
 class RadioList extends AbstractComponent
 {
+    public $space = '&nbsp;';
+
     public function __construct($id = null)
     {
         parent::__construct('div', $id);
@@ -19,9 +21,14 @@ class RadioList extends AbstractComponent
     public function preBuild()
     {
         $request = $_REQUEST[$this->id] ?? null;
+        $j = 0;
         foreach($this->dataset as $i => $row) {
             $v = is_array($row) ? array_values($row) : [$i, $row];
+            if (!empty($j)) {
+                $this->add($this->space);
+            }
             $this->add($this->radioBoxFactory($i, $v[0], $v[1], $request));
+            $j++;
         }
     }
 
