@@ -28,7 +28,7 @@ class RadioList extends AbstractComponent
     protected function radioBoxFactory($idx, $value, $label, $request)
     {
         $RadioBox = new RadioBox($this->id . '_' . $idx, $label, $value);
-        $RadioBox->attribute('name', $this->id);
+        $RadioBox->getRadio()->attribute('name', $this->id);
         if (!is_null($request) && $request == $value) {
             $RadioBox->setChecked(true);
         }
