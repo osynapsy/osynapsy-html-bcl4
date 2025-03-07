@@ -32,7 +32,7 @@ class Link extends BaseLink
     public function setDisabled($condition)
     {
         if ($condition) {
-            $this->attributes([
+            $this->addClass('disabled')->attributes([
                 'href' => 'javascipt:void(0);',
                 'onclick' => 'event.stopPropagation();'
             ]);
