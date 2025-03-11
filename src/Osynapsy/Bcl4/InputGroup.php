@@ -28,7 +28,7 @@ class InputGroup extends AbstractComponent
 
     public function __construct($name, $prefix = null, $postfix = null, $dimension = null)
     {
-        parent::__construct('div');
+        parent::__construct('div', (is_object($name) ? $name->getAttribute('id') : $name).'_cnt');
         $this->addClass('input-group');
         $this->prepend($prefix);
         if (is_object($name)) {
