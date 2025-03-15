@@ -77,7 +77,9 @@ class Addressbook extends Panel
             $p2 = $a->add(new Tag('div', null, 'p2'));
             $p2->add('&nbsp;');
             foreach($rec as $field => $value) {
-				$this->cellFactory($field, $value, $a, $p0, $p1, $p2);
+                if ($field[0] === '_') {
+                    $this->cellFactory($field, $value, $a, $p0, $p1, $p2);
+                }
             }
             if (($i+1) % $this->columns === 0) {
                 $this->addRow();
@@ -87,9 +89,6 @@ class Addressbook extends Panel
 
     protected function cellFactory($k, $v, $a, $p0, $p1, $p2)
     {
-        if ($k[0] === '_') {
-            return;
-        }
         switch($k) {
             case 'checkbox':
                 $checked = '';
