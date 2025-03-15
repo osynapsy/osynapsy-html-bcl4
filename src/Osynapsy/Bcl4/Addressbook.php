@@ -77,7 +77,7 @@ class Addressbook extends Panel
             $p2 = $a->add(new Tag('div', null, 'p2'));
             $p2->add('&nbsp;');
             foreach($rec as $field => $value) {
-                if ($field[0] === '_') {
+                if ($field[0] !== '_') {
                     $this->cellFactory($field, $value, $a, $p0, $p1, $p2);
                 }
             }
