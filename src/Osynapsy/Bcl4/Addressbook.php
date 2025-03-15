@@ -16,7 +16,7 @@ use Osynapsy\Html\Tag;
 /**
  * Description of Adressbook
  *
- * @author Peter
+ * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
 class Addressbook extends Panel
 {
@@ -43,7 +43,7 @@ class Addressbook extends Panel
         if (!empty($this->paginator)) {
             try {
                 $this->setDataset($this->paginator->loadData(null, true));
-                $this->buildPagination($this->paginator);
+                $this->addToFoot(new Tag('div', null, 'pt-1 pl-2'))->add($this->paginator)->setPosition('end');
             } catch (\Exception $e) {
                 $this->emptyMessage = $e->getMessage();
             }
@@ -128,23 +128,6 @@ class Addressbook extends Panel
                 $p1->add('<div class="p1-row">'.$v.'</div>');
                 break;
         }
-    }
-
-    /**
-     * Build Datagrid pagination
-     *
-     * @return Tag
-     */
-    private function buildPagination($pagination)
-    {
-        if ($this->showPaginationPageDimension) {
-            $this->addToFoot('<div class="p-2">Elementi per pagina</div>');
-            $this->addToFoot('<div class="px-2 py-1">'.$pagination->getPageDimensionsCombo()->addClass('form-control-sm').'</div>');
-        }
-        if ($this->showPaginationPageInfo) {
-            $this->addToFoot(new Tag('div', null, 'p-2'))->add($pagination->getInfo());
-        }
-        $this->addToFoot(new Tag('div', null, 'pt-1 pl-2'))->add($pagination)->setPosition('end');
     }
 
     public function addToFoot($content)
