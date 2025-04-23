@@ -20,6 +20,12 @@
         "twbs/bootstrap" : "4.*"        
     },
     "scripts": {
+        "post-package-install" : [
+            "mkdir -p public/assets/vendor/bootstrap",
+            "mkdir -p public/assets/vendor/osynapsy/",
+            "cp -R vendor/twbs/bootstrap/dist public/assets/vendor/bootstrap",                        
+            "cp -R assets/bcl4 public/assets/vendor/osynapsy/"
+        ],
         "post-package-update": [
             "rm -rf public/assets/vendor/bootstrap",
             "rm -rf public/assets/vendor/osynapsy/bcl4",
