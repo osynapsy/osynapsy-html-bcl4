@@ -1,27 +1,23 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-BclPanelAccordion = 
-{
-    init : function()
-    {
-        $('body').on('click','.osy-panel-accordion .panel-heading a',function(){
-            var panelId = $(this).data('panel-id');
-            var openId = $(this).closest('.panel-group').children('input').val();
-            $(this).closest('.panel-group').children('.expanded').removeClass('expanded');
-            if (panelId !== openId) {
-                $(this).closest('.panel-group').children('input').val(panelId); 
-                $(this).closest('.panel').addClass('expanded');
-            }            
-        });
-    }
+const BclPanelAccordion = {
+  init() {
+    document.body.addEventListener('click', (e) => {
+      const link = e.target.closest('.osy-panel-accordion .panel-heading a');
+      if (!link) return;
+
+      const panelId = link.dataset.panelId;
+      const panelGroup = link.closest('.panel-group');
+      const openId = panelGroup.querySelector('input').value;
+
+      panelGroup.querySelectorAll('.expanded').forEach((el) => el.classList.remove('expanded'));
+
+      if (panelId !== openId) {
+        panelGroup.querySelector('input').value = panelId;
+        link.closest('.panel').classList.add('expanded');
+      }
+    });
+  }
 };
 
 if (window.Osynapsy) {
-    Osynapsy.plugin.register('BclPanelAccordion',function(){
-        BclPanelAccordion.init();
-    });
+  window.Osynapsy.plugin.register('BclPanelAccordion', () => BclPanelAccordion.init());
 }
-
