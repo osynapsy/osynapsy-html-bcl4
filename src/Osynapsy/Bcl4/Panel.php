@@ -160,4 +160,12 @@ class Panel extends AbstractComponent
         }
         return $this;
     }
+    
+    public function getFoot()
+    {
+        if (empty($this->sections['foot'])) {
+            $this->sections['foot'] = new Tag('div');
+        }
+        return $this->sections['foot'];
+    }
 }

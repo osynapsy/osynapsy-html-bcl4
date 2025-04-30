@@ -61,6 +61,9 @@ class NavBar extends AbstractComponent
             $ul->addClass('justify-content-end');
             $collapsable->add($ul);
         }
+        if (!empty($this->dataset['custom_right'])) {
+            $collapsable->add($this->dataset['custom_right']);
+        }
     }
 
     /**
@@ -185,12 +188,14 @@ class NavBar extends AbstractComponent
      *
      * @param array $primary set main menu data (near brand)
      * @param array $secondary set second menù aligned to right
+     * @param string $custom_right custom menu aligned to right
      * @return $this Navbar component
      */
-    public function setDataMenu(array $primary, array $secondary = [])
+    public function setDataMenu(array $primary, array $secondary = [], $custom_right = null)
     {
         $this->dataset['primary'] = $primary;
         $this->dataset['secondary'] = $secondary;
+        $this->dataset['custom_right'] = $custom_right;
         return $this;
     }
 
