@@ -124,6 +124,10 @@ BclAutocomplete =
         let searchContainer = this.getSearchContainer(ev.target);
         switch (ev.keyCode) {
             case 9: //Tab
+            case 35: //Home
+            case 36: //End
+            case 37: //Freccia sinistra
+            case 39: //Freccia destra
                 break;
             case 13 : //Enter
                 let selectedRow = searchContainer.querySelector('.item.selected');
