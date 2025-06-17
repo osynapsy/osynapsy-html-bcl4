@@ -136,7 +136,7 @@ class Form extends AbstractComponent
             $this->foot($this->buttonCloseModalFactory());
         }
         if ($delete) {
-            $this->foot($this->buttonDeleteFactory($delete), true);
+            $this->foot(is_object($delete) ? $delete : $this->buttonDeleteFactory($delete), true);
         }
         if ($save) {
             $this->foot(is_object($save) ? $save : $this->buttonSaveFactory($save), true);
