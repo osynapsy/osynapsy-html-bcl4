@@ -20,8 +20,10 @@ class Gallery extends AbstractComponent
     protected $actions = [];
     protected $defaultPhoto;
     protected $contextMenu;
-    protected $modalViewerDimension;
-    protected $showCommands = false;
+    protected $modalViewerDimension;    
+    protected $deleteAction;
+    protected $uploadAction;
+    protected $saveDescriptionAction;
 
     public function __construct($id, $cellWidth = 4)
     {
@@ -39,7 +41,7 @@ class Gallery extends AbstractComponent
         foreach ($this->dataset as $photo) {
             $row->add($this->cellFactory($photo));
         }
-        if ($this->showCommands) {
+        if ($this->uploadAction) {
             $this->add($this->buttonOpenModalFactory());
         }
     }
@@ -56,11 +58,11 @@ class Gallery extends AbstractComponent
     {
         $img = new Tag('img', null, 'img-thumbnail mt-2');
         $img->attributes(['data-toggle' => 'modal', 'data-target' => sprintf('#%sModalViewer', $this->id)]);
-        $img->attribute('onclick', sprintf("let src = $(this).attr('src'); $('#%sViewer').attr('src', src); $('#%sDeleteImage').attr('data-action-parameters', src);", $this->id, $this->id));
+        $img->attribute('onclick', sprintf("let src = $(this).attr('src'); $('#%sViewer').attr('src', src); $('#%sDeleteImage').attr('data-action-parameters', src); $('#%sSaveDescription').attr('data-action-parameters', $(this).data('id'));", $this->id, $this->id, $this->id));
         $img->attribute('src', $photo['url']);
+        $img->attribute('data-id', $photo['id'] ?? $photo['url'] ?? null);
         return $img;
     }
-
 
     protected function labelFactory($photo)
     {
@@ -90,7 +92,10 @@ class Gallery extends AbstractComponent
     {
         $modalId = $this->id.'ModalUpload';
         $Modal = new Modal($modalId, 'Aggiungi foto');
-        $Modal->getPanelBody()->addColumn()->push('Seleziona l\'immagine da aggiungere alla gallery', $this->fileUploadFactory());        
+        $Modal->getPanelBody()->addColumn()->push('Seleziona l\'immagine da aggiungere alla gallery', $this->fileUploadFactory());
+        if ($this->saveDescriptionAction) {
+            $Modal->getPanelBody()->addColumn()->push('Didascalia / Descrizione', new TextBox($this->fieldIDFactory('Description')));
+        }  
         $Modal->addCommand([], [$this->buttonSendPhotoToGalleryFactory()]);
         return $Modal;
     }
@@ -102,32 +107,55 @@ class Gallery extends AbstractComponent
 
     protected function buttonSendPhotoToGalleryFactory()
     {
-        $Button = new Button('btnSendPotoTo'.$this->id, 'Invia foto');
-        $Button->setAction('addPhotoToGallery', [$this->id.'File']);
+        $actionParameters = [$this->fieldIDFactory('File')];
+        if (!empty($this->saveDescriptionAction)) {
+            $actionParameters[] = '#'.$this->fieldIDFactory('Description');
+        }
+        $Button = new Button('btnSendImageTo'.$this->id, 'Invia foto');
+        $Button->setAction($this->uploadAction, $actionParameters);
         return $Button;
     }
 
     protected function modalViewerFactory()
-    {
-        $modalId = $this->id.'ModalViewer';
-        $Modal = new Modal($modalId, 'Foto', $this->modalViewerDimension);
-        $Modal->getPanelBody()->addColumn()->addClass('text-center')->add(new Tag('img', $this->id.'Viewer', 'img-thumbnail'));
-        $Modal->getPanelFoot()->add($this->buttonCloseModalFactory($modalId));
-        if ($this->showCommands) {
-            $Modal->getPanelFoot()->add($this->buttonDeletePhotoFactory());
+    {        
+        $Modal = new Modal($this->fieldIDFactory('ModalViewer'), 'Foto', $this->modalViewerDimension);
+        $Modal->getPanelBody()->addColumn()->addClass('text-center')->add(new Tag('img', $this->fieldIDFactory('Viewer'), 'img-thumbnail'));
+        if ($this->saveDescriptionAction) {
+            $Modal->getPanelBody()->addColumn()->push('Didascalia / Descrizione', $this->fieldDescriptionFactory());
         }
+        $Modal->addCommand([], $this->deleteAction ? [$this->buttonDeletePhotoFactory()] : []);
         return $Modal;
     }
 
+    protected function fieldIDFactory($postfix)
+    {
+        return $this->id . $postfix;
+    }
+    
+    protected function fieldDescriptionFactory()
+    {
+        return new InputGroup($this->id.'Description', null, $this->buttonSaveDescriptionFactory());        
+    }
+    
+    protected function buttonSaveDescriptionFactory()
+    {
+        $fieldId = $this->id . 'SaveDescription';
+        $Button = new Button($fieldId, '', 'btn-primary fa fa-floppy-o');
+        $Button->setAction($this->saveDescriptionAction, ['']);
+        return $Button;
+    }
+    
     protected function buttonDeletePhotoFactory()
     {
         $Button = new Button($this->id.'DeleteImage', 'Elimina foto', 'btn-danger');
-        $Button->setAction('deletePhotoFromGallery', [], 'Sei sicuro di voler eliminare la foto corrente (L\'operazione non è reversibile)? ');
+        $Button->setAction($this->deleteAction, [], 'Sei sicuro di voler eliminare la foto corrente (L\'operazione non è reversibile)? ');
         return $Button;
     }
-
-    public function showCommands($value)
+    
+    public function setActions($uploadActionClass, $deleteActionClass, $saveDescriptionActionClass)
     {
-        $this->showCommands = $value;
+        $this->uploadAction = $uploadActionClass;
+        $this->deleteAction = $deleteActionClass;
+        $this->saveDescriptionAction = $saveDescriptionActionClass;
     }
 }
