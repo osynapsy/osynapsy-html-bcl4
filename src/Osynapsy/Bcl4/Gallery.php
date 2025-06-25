@@ -90,9 +90,8 @@ class Gallery extends AbstractComponent
     {
         $modalId = $this->id.'ModalUpload';
         $Modal = new Modal($modalId, 'Aggiungi foto');
-        $Modal->getPanelBody()->addColumn()->push('Seleziona l\'immagine da aggiungere alla gallery', $this->fileUploadFactory());
-        $Modal->getPanelFoot()->add($this->buttonCloseModalFactory($modalId));
-        $Modal->getPanelFoot()->add($this->buttonSendPhotoToGalleryFactory());
+        $Modal->getPanelBody()->addColumn()->push('Seleziona l\'immagine da aggiungere alla gallery', $this->fileUploadFactory());        
+        $Modal->addCommand([], [$this->buttonSendPhotoToGalleryFactory()]);
         return $Modal;
     }
 
@@ -124,13 +123,6 @@ class Gallery extends AbstractComponent
     {
         $Button = new Button($this->id.'DeleteImage', 'Elimina foto', 'btn-danger');
         $Button->setAction('deletePhotoFromGallery', [], 'Sei sicuro di voler eliminare la foto corrente (L\'operazione non è reversibile)? ');
-        return $Button;
-    }
-
-    protected function buttonCloseModalFactory($modalId)
-    {
-        $Button = new Button($modalId.'CloseModal', 'Chiudi', 'btn-danger');
-        $Button->attribute('data-dismiss', 'modal');
         return $Button;
     }
 
