@@ -12,10 +12,12 @@ use Osynapsy\Html\Component\RadioBox;
 class RadioList extends AbstractComponent
 {
     public $space = '&nbsp;';
+    protected $radioName;
 
     public function __construct($id = null)
     {
         parent::__construct('div', $id);
+        $this->setRadioName($id);
     }
 
     public function preBuild()
@@ -41,4 +43,10 @@ class RadioList extends AbstractComponent
         }
         return $RadioBox;
     }
+    
+    protected function setRadioName($name)
+    {
+        $this->radioName = $name;
+        return $this;
+    } 
 }
