@@ -12,7 +12,6 @@
 namespace Osynapsy\Bcl4;
 
 use Osynapsy\Html\Tag;
-use Osynapsy\Html\Component\InputHidden;
 use Osynapsy\Html\Component\AbstractComponent;
 
 class Gallery extends AbstractComponent
@@ -21,20 +20,16 @@ class Gallery extends AbstractComponent
     protected $actions = [];
     protected $defaultPhoto;
     protected $contextMenu;
-    protected $modalViewerDimension;
+    protected $modalViewerDimension;    
     protected $deleteAction;
     protected $uploadAction;
     protected $saveDescriptionAction;
-    protected $modalCommands = [];
-    protected $modalFields = [];
 
     public function __construct($id, $cellWidth = 4)
     {
-        parent::__construct('div', $id);
+        parent::__construct('div', $id);        
         $this->requireJs('bcl4/filebox/script.js');
-        $this->requireJs('bcl4/gallery/script.js');
         $this->add(new Tag('span', null, 'gallery'));
-        $this->addClass('osy-bcl4-gallery');
         $this->cellWidth = $cellWidth;
     }
 
@@ -61,12 +56,11 @@ class Gallery extends AbstractComponent
 
     protected function thumbnailFactory($photo)
     {
-        $img = new Tag('img', null, 'img-thumbnail mt-2 osy-bcl4-gallery-thumbnail');
+        $img = new Tag('img', null, 'img-thumbnail mt-2');
         $img->attributes(['data-toggle' => 'modal', 'data-target' => sprintf('#%sModalViewer', $this->id)]);
-        //$img->attribute('onclick', sprintf("let src = $(this).attr('src'); $('#%sViewer').attr('src', src); $('#%sDeleteImage').attr('data-action-parameters', src); $('#%sSaveDescription').attr('data-action-parameters', $(this).data('id')); $('#%sPhotoId').val($(this).data('id'));", $this->id, $this->id, $this->id, $this->id));
+        $img->attribute('onclick', sprintf("let src = $(this).attr('src'); $('#%sViewer').attr('src', src); $('#%sDeleteImage').attr('data-action-parameters', src); $('#%sSaveDescription').attr('data-action-parameters', $(this).data('id'));", $this->id, $this->id, $this->id));
         $img->attribute('src', $photo['url']);
         $img->attribute('data-id', $photo['id'] ?? $photo['url'] ?? null);
-        $img->attribute('data-fields', json_encode($photo, JSON_HEX_APOS | JSON_HEX_QUOT));
         return $img;
     }
 
@@ -99,10 +93,9 @@ class Gallery extends AbstractComponent
         $modalId = $this->id.'ModalUpload';
         $Modal = new Modal($modalId, 'Aggiungi foto');
         $Modal->getPanelBody()->addColumn()->push('Seleziona l\'immagine da aggiungere alla gallery', $this->fileUploadFactory());
-        foreach($this->modalFields as $field) {
-            $clonedField = clone($field['field']);
-            $Modal->getPanelBody()->addColumn($field['width'])->push($field['label'], $clonedField->removeAttribute('data-action'));
-        }
+        if ($this->saveDescriptionAction) {
+            $Modal->getPanelBody()->addColumn()->push('Didascalia / Descrizione', new TextBox($this->fieldIDFactory('Description')));
+        }  
         $Modal->addCommand([], [$this->buttonSendPhotoToGalleryFactory()]);
         return $Modal;
     }
@@ -115,8 +108,8 @@ class Gallery extends AbstractComponent
     protected function buttonSendPhotoToGalleryFactory()
     {
         $actionParameters = [$this->fieldIDFactory('File')];
-        foreach($this->modalFields as $field) {
-            $actionParameters[] = '#'.$field['field']->getAttribute('id');
+        if (!empty($this->saveDescriptionAction)) {
+            $actionParameters[] = '#'.$this->fieldIDFactory('Description');
         }
         $Button = new Button('btnSendImageTo'.$this->id, 'Invia foto');
         $Button->setAction($this->uploadAction, $actionParameters);
@@ -124,19 +117,13 @@ class Gallery extends AbstractComponent
     }
 
     protected function modalViewerFactory()
-    {
+    {        
         $Modal = new Modal($this->fieldIDFactory('ModalViewer'), 'Foto', $this->modalViewerDimension);
-        $Modal->addClass('modalImageViewer');
-        $Modal->getPanelBody()->add(new InputHidden($this->fieldIDFactory('PhotoId')))->addClass('osy-bcl4-gallery-image-id');
-        $Modal->getPanelBody()->addColumn()->addClass('text-center')->add(new Tag('img', $this->fieldIDFactory('Viewer'), 'osy-bcl4-gallery-viewer'))->attribute('width', '100%');
-        foreach($this->modalFields as $field) {
-            $field['field']->addClass('osy-bcl4-gallery-field');
-            $Modal->getPanelBody()->addColumn($field['width'])->push($field['label'], $field['field']);
+        $Modal->getPanelBody()->addColumn()->addClass('text-center')->add(new Tag('img', $this->fieldIDFactory('Viewer'), 'img-thumbnail'));
+        if ($this->saveDescriptionAction) {
+            $Modal->getPanelBody()->addColumn()->push('Didascalia / Descrizione', $this->fieldDescriptionFactory());
         }
-        if ($this->deleteAction) {
-            $this->modalCommands[] = $this->buttonDeletePhotoFactory();
-        }
-        $Modal->addCommand([], $this->modalCommands);
+        $Modal->addCommand([], $this->deleteAction ? [$this->buttonDeletePhotoFactory()] : []);
         return $Modal;
     }
 
@@ -144,12 +131,12 @@ class Gallery extends AbstractComponent
     {
         return $this->id . $postfix;
     }
-
+    
     protected function fieldDescriptionFactory()
     {
-        $this->addModalField('Didascalia / Descrizione', new InputGroup($this->id.'Description', null, $this->buttonSaveDescriptionFactory()), 12);
+        return new InputGroup($this->id.'Description', null, $this->buttonSaveDescriptionFactory());        
     }
-
+    
     protected function buttonSaveDescriptionFactory()
     {
         $fieldId = $this->id . 'SaveDescription';
@@ -157,28 +144,18 @@ class Gallery extends AbstractComponent
         $Button->setAction($this->saveDescriptionAction, ['']);
         return $Button;
     }
-
+    
     protected function buttonDeletePhotoFactory()
     {
-        $Button = new Button($this->id.'DeleteImage', 'Elimina foto', 'osy4-bcl-gallery-image-delete btn-danger');
+        $Button = new Button($this->id.'DeleteImage', 'Elimina foto', 'btn-danger');
         $Button->setAction($this->deleteAction, [], 'Sei sicuro di voler eliminare la foto corrente (L\'operazione non è reversibile)? ');
         return $Button;
     }
-
+    
     public function setActions($uploadActionClass, $deleteActionClass, $saveDescriptionActionClass)
     {
         $this->uploadAction = $uploadActionClass;
         $this->deleteAction = $deleteActionClass;
         $this->saveDescriptionAction = $saveDescriptionActionClass;
-    }
-
-    public function addModalCommand($cmd)
-    {
-        $this->modalCommands[] = $cmd;
-    }
-
-    public function addModalField($label, $field, $columnWidth = 12)
-    {
-        $this->modalFields[] = ['label' => $label, 'field' => $field, 'width' => $columnWidth];
     }
 }
