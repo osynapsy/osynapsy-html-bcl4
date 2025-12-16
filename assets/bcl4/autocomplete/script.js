@@ -115,8 +115,21 @@ BclAutocomplete =
     init : function()
     {        
         Osynapsy.element('body')
+        .on('focusin', 'div.osy-autocomplete input[type=text]', ev => BclAutocomplete.onFocus(ev))
         .on('keydown', 'div.osy-autocomplete input[type=text]', ev => BclAutocomplete.keyPressDispatcher(ev))
         .on('focusout', 'div.osy-autocomplete input[type=text]', ev => setTimeout(() => BclAutocomplete.getSearchContainer(ev.target).hide(), 500));         
+    },
+    onFocus : function(ev)
+    {
+        console.log('ci sono');
+        let input = ev.target;
+        let searchContainer = this.getSearchContainer(input);
+
+        // Evita doppie richieste se il box è già aperto
+        if (searchContainer.isVisible?.()) return;
+
+        this.clearTimeouts();
+        this.refreshSearchResult(input, searchContainer, false);
     },
     keyPressDispatcher : function(ev)
     {
