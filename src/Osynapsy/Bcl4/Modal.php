@@ -24,6 +24,7 @@ class Modal extends AbstractComponent
     public $panelFoot;
     private $columnCommandLeft;
     private $columnCommandRight;
+    private $isClosable = true;
     public $footer;
 
     public function __construct($id, $title = '', $type = '')
@@ -34,10 +35,19 @@ class Modal extends AbstractComponent
                               ->add(new Tag('div', null, 'modal-content'));
         $this->header = $this->content->add(new Tag('div', null, 'modal-header'));
         $this->title = $this->header->add(new Tag('h5'))->attribute('class','modal-title');
-        $this->header->add('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-        $this->title->add($title);
+        $this->setTitle($title);
         $this->body = $this->content->add(new Tag('div', null, 'modal-body'));
         $this->footer = $this->content->add(new Tag('div', null, 'modal-footer d-block'));
+    }
+
+    public function preBuild()
+    {
+        if ($this->isClosable) {
+            $this->header->add('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+        } else {
+            $this->attribute('data-backdrop', 'static');
+            $this->attribute('data-keyboard', 'false');
+        }
     }
 
     public function addFooter($content)
@@ -84,6 +94,18 @@ class Modal extends AbstractComponent
         }
         $this->columnCommandLeft->append($left);
         $this->columnCommandRight->append($right);
+    }
+
+    public function isClosable(bool $v)
+    {
+        $this->isClosable = $v;
+        return $this;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title->removeAllChildren()->add($title);
+        return $this;
     }
 
     public function __call($method, $args)
