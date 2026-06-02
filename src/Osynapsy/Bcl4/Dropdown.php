@@ -23,6 +23,7 @@ class Dropdown extends AbstractComponent
 {
     const ALIGN_LEFT = 'left';
     const ALIGN_RIGHT = 'right';
+    const SEPARATOR = 'divider';
 
     private $button;
     private $align;
