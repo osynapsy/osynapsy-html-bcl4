@@ -129,6 +129,7 @@ class Form extends AbstractComponent
 
     public function setCommand($delete = false, $save = true, $back = true, $closeModal = false, $fixbar = false)
     {
+        $this->resetFoot();
         if ($back) {
             $this->foot($this->buttonBackFactory());
         }
@@ -145,7 +146,7 @@ class Form extends AbstractComponent
             $this->fixCommandBar();
         }
     }
-
+    
     public function setType($type)
     {
         if ($type == 'horizontal') {
@@ -176,6 +177,12 @@ class Form extends AbstractComponent
         }
     }
 
+    public function resetFoot()
+    {        
+        $this->foot = $this->footLeft = $this->footRight = null;
+        return $this;
+    }
+    
     public function showBackground()
     {
         if (method_exists($this->body, 'setClasses')) {
