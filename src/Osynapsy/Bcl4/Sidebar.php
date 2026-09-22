@@ -11,64 +11,83 @@
 
 namespace Osynapsy\Bcl4;
 
-use Osynapsy\Html\Component\AbstractComponent;
 use Osynapsy\Html\Tag;
+use Osynapsy\Html\Component\AbstractComponent;
 
 /**
- * Description of Sidebar
- *
- * @author Pietro Celeste <p.celeste@osynapsy.net>
+ * Costruttore della Sidebar HTML
  */
 class Sidebar extends AbstractComponent
 {
-    protected $button;
-    protected $sidebar;
+    private $items = array();
+    private $groups = array();
 
     public function __construct($id)
     {
-        parent::__construct('dummy', 'dummy'.$id);
-        $this->addClass('sidebar');
+        // Usiamo il tag 'nav' come base per la sidebar
+        parent::__construct('nav', $id);
         $this->requireCss('bcl4/sidebar/style.css');
-        $this->requireJs('bcl4/sidebar/script.js');
-        $this->button = $this->buttonOpenSidebarFactory($id);
-        $this->sidebar = parent::add($this->sidebarFactory($id));
+
+        // Classi standard Bootstrap 4 per una sidebar verticale
+        $this->addClass('nav flex-column sidebar');
     }
 
-    protected function buttonOpenSidebarFactory($id)
+    public function preBuild()
     {
-        $button = new Tag('button', 'btnOpen'.$id, 'btn btn-xs btn-default bcl4-sidebar-command');
-        $button->attributes(['data-target' => $id, 'type' => 'button']);
-        $button->add('&#9776;');
-        return $button;
+        // Prima aggiungiamo i titoli dei gruppi (se presenti)
+        foreach ($this->groups as $group) {
+            $this->add($group);
+        }
+
+        // Poi aggiungiamo i link
+        foreach ($this->items as $item) {
+            $this->add($item);
+        }
     }
 
-    protected function sidebarFactory($id)
+    /**
+     * Aggiunge un titolo di sezione alla sidebar
+     * @param string $title
+     * @return Tag
+     */
+    public function addGroup($title)
     {
-        $sidebar = new Tag('div', $id, 'sidebar d-none');
-        $sidebar->attribute('data-is-open', '0');
-        $sidebar->add($this->buttonCloseFactory($id));
-        return $sidebar;
+        $h5 = new Tag('h6', null, 'sidebar-group-title px-3 mt-3 mb-2');
+        $h5->add($title);
+        $this->groups[] = $h5;
+        return $h5;
     }
 
-    public function buttonCloseFactory($id)
+    /**
+     * Aggiunge un elemento di navigazione alla sidebar
+     *
+     * @param string $label Il testo del link
+     * @param string $url L'URL di destinazione
+     * @param string|null $icon Nome dell'icona (es. 'fas fa-home')
+     * @param bool $active Se il link deve essere attivo
+     * @return Tag
+     */
+    public function addItem($label, $url, $icon = null, $active = false)
     {
-        $button = new Tag('span', null, 'fa fa-times text-secondary float-right bcl4-sidebar-command mr-4');
-        $button->attributes(['data-target' => $id]);
-        return $button;
-    }
+        $navItem = new Tag('li', null, 'nav-item');
+        $navLink = new Tag('a', null, 'nav-link');
 
-    public function add($child)
-    {
-        return $this->getSidebar()->add($child);
-    }
+        $navLink->attributes([
+            'href' => $url,
+            'class' => $active ? 'active' : ''
+        ]);
 
-    public function getButton()
-    {
-        return $this->button;
-    }
+        // Se c'è un'icona, la aggiungiamo prima del testo
+        if ($icon) {
+            $iconTag = new Tag('i', null, $icon);
+            $navLink->add($iconTag);
+            $navLink->add(new Tag('span', null, ' mr-2')); // Spaziatore
+        }
 
-    public function getSidebar()
-    {
-        return $this->sidebar;
+        $navLink->add(new Tag('span', null, $label));
+        $navItem->add($navLink);
+
+        $this->items[] = $navItem;
+        return $navItem;
     }
 }
